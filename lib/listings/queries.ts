@@ -1,6 +1,6 @@
 import { cacheLife } from "next/cache"
 import { createPublicClient } from "@/lib/supabase/public"
-import type { Category, Listing } from "@/lib/types/listing"
+import { DEPARTMENTS, type Category, type Listing } from "@/lib/types/listing"
 
 type ListingRow = Listing & {
   listing_categories?: { categories: Category | Category[] | null }[] | null
@@ -95,6 +95,8 @@ export type SearchListingsParams = {
   q?: string
   category?: string
   department?: string
+  tag?: string
+  type?: "event" | "place"
   limit?: number
 }
 
@@ -104,7 +106,7 @@ export async function searchListings(
   "use cache"
   cacheLife("minutes")
 
-  const { q, category, department, limit = 24 } = params
+  const { q, category, department, tag, type, limit = 24 } = params
   const supabase = createPublicClient()
 
   let query = supabase
@@ -114,12 +116,20 @@ export async function searchListings(
     .order("starts_at", { ascending: true, nullsFirst: false })
     .limit(limit)
 
+  if (type) {
+    query = query.eq("type", type)
+  }
   if (department) {
     query = query.eq("department", department)
   }
+  if (tag?.trim()) {
+    query = query.contains("tags", [tag.trim()])
+  }
   if (q?.trim()) {
     const term = q.trim().replace(/[%_,]/g, "")
-    query = query.or(`title.ilike.%${term}%,description.ilike.%${term}%`)
+    query = query.or(
+      `title.ilike.%${term}%,description.ilike.%${term}%,transport_info.ilike.%${term}%`
+    )
   }
   if (category) {
     const { data: cat } = await supabase
@@ -150,6 +160,65 @@ export async function searchListings(
     items: (data as ListingRow[] | null)?.map(mapListing) ?? [],
     total: count ?? 0,
   }
+}
+
+export async function getPlacesByDepartment(
+  department: string,
+  limit = 6
+): Promise<Listing[]> {
+  "use cache"
+  cacheLife("minutes")
+
+  const supabase = createPublicClient()
+  const { data, error } = await supabase
+    .from("listings")
+    .select(listingSelect)
+    .eq("is_published", true)
+    .eq("type", "place")
+    .eq("department", department)
+    .order("featured", { ascending: false })
+    .order("published_at", { ascending: false })
+    .limit(limit)
+
+  if (error) {
+    console.error("getPlacesByDepartment", error.message)
+    return []
+  }
+  return (data as ListingRow[] | null)?.map(mapListing) ?? []
+}
+
+export async function getPlacesGroupedByDepartment(
+  limitPerDept = 6
+): Promise<Record<string, Listing[]>> {
+  "use cache"
+  cacheLife("minutes")
+
+  const supabase = createPublicClient()
+  const { data, error } = await supabase
+    .from("listings")
+    .select(listingSelect)
+    .eq("is_published", true)
+    .eq("type", "place")
+    .in("department", [...DEPARTMENTS])
+    .order("featured", { ascending: false })
+    .order("published_at", { ascending: false })
+
+  if (error) {
+    console.error("getPlacesGroupedByDepartment", error.message)
+    return Object.fromEntries(DEPARTMENTS.map((d) => [d, []]))
+  }
+
+  const mapped = (data as ListingRow[] | null)?.map(mapListing) ?? []
+  const grouped = Object.fromEntries(
+    DEPARTMENTS.map((department) => [
+      department,
+      mapped
+        .filter((item) => item.department === department)
+        .slice(0, limitPerDept),
+    ])
+  ) as Record<string, Listing[]>
+
+  return grouped
 }
 
 export async function getListingBySlug(

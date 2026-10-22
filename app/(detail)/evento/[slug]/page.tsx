@@ -3,6 +3,7 @@ import { Suspense } from "react"
 import { notFound } from "next/navigation"
 import { ListingDetail } from "@/components/listings/listing-detail"
 import { getListingBySlug } from "@/lib/listings/queries"
+import { absoluteMediaUrl } from "@/lib/media"
 import { Skeleton } from "@/components/ui/skeleton"
 
 type Props = {
@@ -21,7 +22,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: listing.title,
       description: listing.description.slice(0, 160),
-      images: listing.cover_image_url ? [listing.cover_image_url] : undefined,
+      images: absoluteMediaUrl(
+        listing.cover_image_url ?? `/covers/${listing.slug}.jpg`
+      )
+        ? [
+            absoluteMediaUrl(
+              listing.cover_image_url ?? `/covers/${listing.slug}.jpg`
+            )!,
+          ]
+        : undefined,
     },
   }
 }

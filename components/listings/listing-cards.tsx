@@ -1,36 +1,13 @@
-import Image from "next/image"
 import Link from "next/link"
 import { CalendarClock } from "lucide-react"
 import type { Listing } from "@/lib/types/listing"
 import { formatEventWhen, formatPriceFrom } from "@/lib/format"
+import { CoverImage } from "@/components/listings/cover-image"
 
 function listingHref(listing: Listing) {
   return listing.type === "event"
     ? `/evento/${listing.slug}`
     : `/lugar/${listing.slug}`
-}
-
-function Cover({
-  listing,
-  className,
-  sizes,
-}: {
-  listing: Listing
-  className: string
-  sizes: string
-}) {
-  if (!listing.cover_image_url) {
-    return <div className={`bg-primary/20 ${className}`} />
-  }
-  return (
-    <Image
-      src={listing.cover_image_url}
-      alt={listing.title}
-      fill
-      sizes={sizes}
-      className={`object-cover ${className}`}
-    />
-  )
 }
 
 export function EventCard({ listing }: { listing: Listing }) {
@@ -42,7 +19,12 @@ export function EventCard({ listing }: { listing: Listing }) {
       className="block w-[16.5rem] shrink-0 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm transition hover:shadow-md sm:w-[18rem]"
     >
       <div className="relative aspect-[4/3] bg-muted">
-        <Cover listing={listing} className="" sizes="288px" />
+        <CoverImage
+          src={listing.cover_image_url}
+          slug={listing.slug}
+          alt={listing.title}
+          sizes="288px"
+        />
         <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-sand px-2.5 py-1 text-xs font-semibold text-foreground">
           <CalendarClock className="size-3.5" />
           Próximo
@@ -69,7 +51,12 @@ export function PlaceCard({ listing }: { listing: Listing }) {
       className="block w-[14rem] shrink-0 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm transition hover:shadow-md sm:w-[16rem]"
     >
       <div className="relative aspect-[5/4] bg-muted">
-        <Cover listing={listing} className="" sizes="256px" />
+        <CoverImage
+          src={listing.cover_image_url}
+          slug={listing.slug}
+          alt={listing.title}
+          sizes="256px"
+        />
       </div>
       <div className="space-y-1 p-3.5">
         <h3 className="line-clamp-2 text-base font-semibold text-foreground">
@@ -97,7 +84,12 @@ export function DirectoryCard({ listing }: { listing: Listing }) {
       className="flex gap-3 rounded-2xl border border-border/70 bg-card p-3 shadow-sm transition hover:shadow-md"
     >
       <div className="relative size-24 shrink-0 overflow-hidden rounded-xl bg-muted sm:size-28">
-        <Cover listing={listing} className="" sizes="112px" />
+        <CoverImage
+          src={listing.cover_image_url}
+          slug={listing.slug}
+          alt={listing.title}
+          sizes="112px"
+        />
       </div>
       <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 py-0.5">
         <h3 className="line-clamp-2 text-base font-semibold text-foreground">

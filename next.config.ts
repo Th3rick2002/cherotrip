@@ -10,10 +10,6 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-      {
-        protocol: "https",
         hostname: "xrnffirpxbnslwnvudpu.supabase.co",
         pathname: "/storage/v1/object/public/**",
       },

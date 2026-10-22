@@ -16,6 +16,7 @@ type ExplorarSearchParams = Promise<{
   q?: string
   categoria?: string
   departamento?: string
+  tag?: string
 }>
 
 export default function ExplorarPage({
@@ -62,55 +63,96 @@ async function ExplorarResults({
   const q = params.q?.trim() || undefined
   const categoria = params.categoria || undefined
   const departamento = params.departamento || undefined
+  const tag = params.tag || undefined
 
   const [categories, result] = await Promise.all([
     getCategories(),
-    searchListings({ q, category: categoria, department: departamento }),
+    searchListings({
+      q,
+      category: categoria,
+      department: departamento,
+      tag,
+    }),
   ])
 
   function hrefFor(next: {
     categoria?: string | null
     departamento?: string | null
+    tag?: string | null
   }) {
     const sp = new URLSearchParams()
     if (q) sp.set("q", q)
+
     const cat =
       next.categoria === null ? undefined : (next.categoria ?? categoria)
     const dep =
       next.departamento === null
         ? undefined
         : (next.departamento ?? departamento)
+    const nextTag = next.tag === null ? undefined : (next.tag ?? tag)
+
     if (cat) sp.set("categoria", cat)
     if (dep) sp.set("departamento", dep)
+    if (nextTag) sp.set("tag", nextTag)
+
     const qs = sp.toString()
     return qs ? `/explorar?${qs}` : "/explorar"
   }
 
   return (
     <>
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
-        {categories.map((cat) => (
-          <CategoryChip
-            key={cat.id}
-            slug={cat.slug}
-            name={cat.name}
-            icon={cat.icon}
-            active={categoria === cat.slug}
-            href={hrefFor({
-              categoria: categoria === cat.slug ? null : cat.slug,
-            })}
-          />
-        ))}
-        {DEPARTMENTS.map((dep) => (
-          <FilterChip
-            key={dep}
-            label={dep}
-            active={departamento === dep}
-            href={hrefFor({
-              departamento: departamento === dep ? null : dep,
-            })}
-          />
-        ))}
+      <div className="space-y-3">
+        <div className="space-y-2">
+          <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+            Categoría
+          </p>
+          <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+            {categories.map((cat) => (
+              <CategoryChip
+                key={cat.id}
+                slug={cat.slug}
+                name={cat.name}
+                icon={cat.icon}
+                active={categoria === cat.slug}
+                href={hrefFor({
+                  categoria: categoria === cat.slug ? null : cat.slug,
+                })}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+            Departamento
+          </p>
+          <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+            {DEPARTMENTS.map((dep) => (
+              <FilterChip
+                key={dep}
+                label={dep}
+                active={departamento === dep}
+                href={hrefFor({
+                  departamento: departamento === dep ? null : dep,
+                })}
+              />
+            ))}
+          </div>
+        </div>
+
+        {tag ? (
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+              Colección: {tag}
+            </span>
+            <a
+              href={hrefFor({ tag: null })}
+              className="text-xs font-medium text-muted-foreground hover:text-foreground"
+            >
+              Quitar
+            </a>
+          </div>
+        ) : null}
       </div>
 
       <p className="text-sm text-muted-foreground">

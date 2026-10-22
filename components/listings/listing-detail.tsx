@@ -1,7 +1,4 @@
-import Image from "next/image"
-import Link from "next/link"
 import {
-  ArrowLeft,
   BadgeCheck,
   Bus,
   CalendarClock,
@@ -13,6 +10,8 @@ import type { Listing } from "@/lib/types/listing"
 import { formatEventWhen, formatPriceFrom } from "@/lib/format"
 import { WhatsAppCta } from "@/components/listings/whatsapp-cta"
 import { ShareButton } from "@/components/listings/share-button"
+import { BackButton } from "@/components/listings/back-button"
+import { CoverImage } from "@/components/listings/cover-image"
 
 function extrasLabel(extras: Record<string, unknown>): string {
   const labels: string[] = []
@@ -41,24 +40,15 @@ export function ListingDetail({ listing }: { listing: Listing }) {
   return (
     <article className="flex min-h-full flex-1 flex-col">
       <div className="relative aspect-[16/11] w-full bg-muted sm:aspect-[21/9] sm:max-h-[28rem]">
-        {listing.cover_image_url ? (
-          <Image
-            src={listing.cover_image_url}
-            alt={listing.title}
-            fill
-            priority
-            sizes="(max-width: 1024px) 100vw, 1024px"
-            className="object-cover"
-          />
-        ) : null}
+        <CoverImage
+          src={listing.cover_image_url}
+          slug={listing.slug}
+          alt={listing.title}
+          priority
+          sizes="(max-width: 1024px) 100vw, 1024px"
+        />
         <div className="absolute inset-x-0 top-0 flex items-start justify-between p-4">
-          <Link
-            href="/explorar"
-            className="inline-flex items-center gap-1.5 rounded-full bg-card/95 px-3 py-2 text-sm font-medium text-foreground shadow-sm backdrop-blur"
-          >
-            <ArrowLeft className="size-4" />
-            Atrás
-          </Link>
+          <BackButton />
           <ShareButton title={listing.title} />
         </div>
       </div>

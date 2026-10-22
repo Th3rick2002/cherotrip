@@ -5,8 +5,12 @@ import {
   EventCard,
   PlaceCard,
 } from "@/components/listings/listing-cards"
+import { QuickCollections } from "@/components/home/quick-collections"
+import { QuickServices } from "@/components/home/quick-services"
+import { DepartmentPlacesTabs } from "@/components/home/department-places-tabs"
 import {
   getFeaturedPlaces,
+  getPlacesGroupedByDepartment,
   getUpcomingEvents,
 } from "@/lib/listings/queries"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -24,8 +28,16 @@ export default function HomePage() {
         <SearchField />
       </section>
 
+      <QuickCollections />
+
       <Suspense fallback={<CarouselSkeleton title="Eventos próximos" />}>
         <UpcomingSection />
+      </Suspense>
+
+      <QuickServices />
+
+      <Suspense fallback={<DepartmentSkeleton />}>
+        <DepartmentSection />
       </Suspense>
 
       <Suspense fallback={<CarouselSkeleton title="Lugares destacados" />}>
@@ -62,6 +74,11 @@ async function UpcomingSection() {
       )}
     </section>
   )
+}
+
+async function DepartmentSection() {
+  const placesByDepartment = await getPlacesGroupedByDepartment(6)
+  return <DepartmentPlacesTabs placesByDepartment={placesByDepartment} />
 }
 
 async function FeaturedSection() {
@@ -108,6 +125,25 @@ function CarouselSkeleton({ title }: { title: string }) {
       <div className="flex gap-3 overflow-hidden">
         <Skeleton className="h-56 w-66 shrink-0 rounded-2xl" />
         <Skeleton className="h-56 w-66 shrink-0 rounded-2xl" />
+      </div>
+    </section>
+  )
+}
+
+function DepartmentSkeleton() {
+  return (
+    <section className="space-y-3">
+      <h2 className="text-xl font-semibold text-foreground">
+        Explora por departamento
+      </h2>
+      <div className="flex gap-2">
+        <Skeleton className="h-10 w-28 rounded-full" />
+        <Skeleton className="h-10 w-24 rounded-full" />
+        <Skeleton className="h-10 w-28 rounded-full" />
+      </div>
+      <div className="flex gap-3 overflow-hidden">
+        <Skeleton className="h-52 w-56 shrink-0 rounded-2xl" />
+        <Skeleton className="h-52 w-56 shrink-0 rounded-2xl" />
       </div>
     </section>
   )
