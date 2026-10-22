@@ -11,13 +11,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet"
-
-const NAV = [
-  { href: "/", label: "Inicio" },
-  { href: "/explorar", label: "Explorar" },
-  { href: "/sobre", label: "Sobre Cherotrip" },
-  { href: "/contacto", label: "Contacto / Soporte" },
-] as const
+import { isNavActive, MAIN_NAV } from "@/lib/nav"
 
 type SideDrawerProps = {
   open: boolean
@@ -43,11 +37,8 @@ export function SideDrawer({ open, onOpenChange }: SideDrawerProps) {
         </SheetHeader>
 
         <nav className="flex flex-col gap-1 p-3">
-          {NAV.map((item) => {
-            const active =
-              item.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(item.href)
+          {MAIN_NAV.map((item) => {
+            const active = isNavActive(pathname, item.href)
             return (
               <Link
                 key={item.href}
@@ -60,7 +51,7 @@ export function SideDrawer({ open, onOpenChange }: SideDrawerProps) {
                     : "text-foreground hover:bg-muted/70"
                 )}
               >
-                {item.label}
+                {item.label === "Contacto" ? "Contacto / Soporte" : item.label}
                 <ChevronRight className="size-4 text-muted-foreground" />
               </Link>
             )

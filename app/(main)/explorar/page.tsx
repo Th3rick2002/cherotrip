@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { Suspense } from "react"
 import { SearchField } from "@/components/listings/search-field"
 import {
@@ -18,6 +19,13 @@ type ExplorarSearchParams = Promise<{
   departamento?: string
   tag?: string
 }>
+
+export const metadata: Metadata = {
+  title: "Explorar",
+  description:
+    "Directorio verificado de eventos y lugares del oriente de El Salvador. Filtra por categoría y departamento.",
+  alternates: { canonical: "/explorar" },
+}
 
 export default function ExplorarPage({
   searchParams,

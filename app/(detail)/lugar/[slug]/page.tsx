@@ -3,7 +3,7 @@ import { Suspense } from "react"
 import { notFound } from "next/navigation"
 import { ListingDetail } from "@/components/listings/listing-detail"
 import { getListingBySlug } from "@/lib/listings/queries"
-import { absoluteMediaUrl } from "@/lib/media"
+import { listingMetadata } from "@/lib/seo"
 import { Skeleton } from "@/components/ui/skeleton"
 
 type Props = {
@@ -16,23 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!listing || listing.type !== "place") {
     return { title: "Lugar no encontrado" }
   }
-  return {
-    title: listing.title,
-    description: listing.description.slice(0, 160),
-    openGraph: {
-      title: listing.title,
-      description: listing.description.slice(0, 160),
-      images: absoluteMediaUrl(
-        listing.cover_image_url ?? `/covers/${listing.slug}.jpg`
-      )
-        ? [
-            absoluteMediaUrl(
-              listing.cover_image_url ?? `/covers/${listing.slug}.jpg`
-            )!,
-          ]
-        : undefined,
-    },
-  }
+  return listingMetadata(listing)
 }
 
 export default function LugarPage({ params }: Props) {

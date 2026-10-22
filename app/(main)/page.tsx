@@ -67,8 +67,12 @@ async function UpcomingSection() {
         <EmptyHint text="Aún no hay eventos próximos publicados." />
       ) : (
         <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 sm:-mx-0 sm:px-0">
-          {events.map((listing) => (
-            <EventCard key={listing.id} listing={listing} />
+          {events.map((listing, index) => (
+            <EventCard
+              key={listing.id}
+              listing={listing}
+              priority={index === 0}
+            />
           ))}
         </div>
       )}

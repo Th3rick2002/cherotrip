@@ -48,3 +48,7 @@ supabase/.branches
 
 # package manager noise
 bun.lock
+
+# Serwist generated service worker
+public/sw*
+public/swe-worker*

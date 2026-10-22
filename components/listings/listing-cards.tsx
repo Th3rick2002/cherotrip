@@ -10,7 +10,13 @@ function listingHref(listing: Listing) {
     : `/lugar/${listing.slug}`
 }
 
-export function EventCard({ listing }: { listing: Listing }) {
+export function EventCard({
+  listing,
+  priority = false,
+}: {
+  listing: Listing
+  priority?: boolean
+}) {
   const when = formatEventWhen(listing.starts_at)
 
   return (
@@ -24,6 +30,7 @@ export function EventCard({ listing }: { listing: Listing }) {
           slug={listing.slug}
           alt={listing.title}
           sizes="288px"
+          priority={priority}
         />
         <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-sand px-2.5 py-1 text-xs font-semibold text-foreground">
           <CalendarClock className="size-3.5" />
@@ -42,7 +49,13 @@ export function EventCard({ listing }: { listing: Listing }) {
   )
 }
 
-export function PlaceCard({ listing }: { listing: Listing }) {
+export function PlaceCard({
+  listing,
+  priority = false,
+}: {
+  listing: Listing
+  priority?: boolean
+}) {
   const category = listing.categories?.[0]?.name
 
   return (
@@ -56,6 +69,7 @@ export function PlaceCard({ listing }: { listing: Listing }) {
           slug={listing.slug}
           alt={listing.title}
           sizes="256px"
+          priority={priority}
         />
       </div>
       <div className="space-y-1 p-3.5">

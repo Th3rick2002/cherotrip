@@ -1,7 +1,4 @@
-"use client"
-
 import Image from "next/image"
-import { useState } from "react"
 import { cn } from "cn"
 
 type CoverImageProps = {
@@ -15,7 +12,7 @@ type CoverImageProps = {
 
 /**
  * Prefiere covers locales en `/public/covers/{slug}.jpg`
- * para evitar timeouts del optimizador con Unsplash.
+ * (optimizadas por next/image → WebP/AVIF).
  */
 export function CoverImage({
   src,
@@ -25,10 +22,9 @@ export function CoverImage({
   className,
   priority = false,
 }: CoverImageProps) {
-  const [failed, setFailed] = useState(false)
   const resolved = resolveCoverSrc(src, slug)
 
-  if (!resolved || failed) {
+  if (!resolved) {
     return (
       <div
         className={cn(
@@ -49,9 +45,9 @@ export function CoverImage({
       fill
       sizes={sizes}
       priority={priority}
+      // Externas: sin optimizador (timeouts). Locales: next/image.
       unoptimized={!isLocal}
       className={cn("object-cover", className)}
-      onError={() => setFailed(true)}
     />
   )
 }
