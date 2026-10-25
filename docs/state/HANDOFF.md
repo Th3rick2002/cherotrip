@@ -45,22 +45,25 @@ NEXT_PUBLIC_SITE_URL=https://cherotrip.vercel.app
 
 ## 3. Estado Actual del Repositorio
 
-- **Rama activa:** `main` (desplegada automáticamente en Vercel).
+- **Rama activa:** `feat/MigrationDB` (o `main`).
 - **Fase 1 Core:** 100% implementada y visible en producción.
-- **Issues en GitHub:** 15 issues abiertas (5 de soft launch #26–#30, y 10 de expansión v3 #31–#40).
+- **Fase 2 / v3:**
+  - Issue #31 completada y cerrada (migración DB v3 en remoto).
+  - Issue #32 descartada y cerrada (reemplazada por CMS).
+  - Issues activas en GitHub: 17 abiertas (5 soft launch, 8 v3 público, 4 CMS admin).
 
 ## 4. Próxima Tarea a Ejecutar
 
-👉 **Tomar la Issue [#31](https://github.com/Th3rick2002/cherotrip/issues/31): `[v3] Migración DB: columnas listing + sub_eventos + aportes_comunidad`**
-- Crear archivo de migración en `supabase/migrations/` con:
-  - Columnas opcionales en `listings`: `link_instagram`, `link_facebook`, `link_tiktok`, `link_taquilla`, `proveedor_taquilla`, `link_alojamiento`, `municipio_busqueda`.
-  - Nueva tabla `sub_eventos` con índice en `(listing_id, fecha_dia, hora_inicio)` y RLS de lectura si el listing está publicado.
-  - Nueva tabla `aportes_comunidad` con RLS solo `INSERT` para `anon`.
-- Actualizar `lib/types/listing.ts`.
-- Aplicar vía `pnpm db:push`.
+👉 **Tomar la Issue [#33](https://github.com/Th3rick2002/cherotrip/issues/33): `[v3][UI] SocialLinks — redes oficiales en ficha de detalle` (Bloque 2.1)**
+- Crear el componente `SocialLinks.tsx` en `components/listings/`.
+- Renderizar condicionalmente iconos minimalistas para Instagram, Facebook y TikTok oficiales (usando los nuevos campos de la migración #31).
+- Integrar en `listing-detail.tsx` debajo de la descripción general, sin romper la cuadrícula logística ni el CTA sticky.
 
 ## 5. Dónde leer más
 
 - [docs/INDEX.md](../INDEX.md) · Mapa general.
+- [docs/specs/expansion-logistica.md](../specs/expansion-logistica.md) · Especificación de Bloque 2 (P3).
+- [docs/specs/admin-cms.md](../specs/admin-cms.md) · Especificación del Panel Admin CMS (Bloque 4).
+- [docs/ui-ux/screens.md](../ui-ux/screens.md) · Detalles visuales de pantallas públicas y CMS.
 - [docs/specs/expansion-logistica.md](../specs/expansion-logistica.md) · Especificación de Bloque 2.
 - [docs/ui-ux/screens.md](../ui-ux/screens.md) · Detalles visuales de pantallas.

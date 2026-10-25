@@ -7,11 +7,12 @@ Listado de especificaciones funcionales por módulo y fase de Cherotrip.
 | Especificación | Estado | Bloque / Fase | Documento |
 |---|---|---|---|
 | **Directorio Core** | ✅ Implementado (Prod) | Fase 1 | [`directorio-core.md`](./directorio-core.md) |
-| **Expansión Logística** | 🟡 En Desarrollo (Issues #31–#36) | Bloque 2 (v3) | [`expansion-logistica.md`](./expansion-logistica.md) |
+| **Expansión Logística** | 🟡 En Desarrollo (Issues #33–#36) | Bloque 2 (v3) | [`expansion-logistica.md`](./expansion-logistica.md) |
 | **Social Light** | 🟡 Planificado (Issues #37–#39) | Bloque 3 (v3) | [`social-light.md`](./social-light.md) |
+| **Panel Administrativo (CMS)** | 🟡 Planificado (Issues #41–#44) | Bloque 4 (v3) | [`admin-cms.md`](./admin-cms.md) |
 
 ## Criterios de Aceptación Globales
 
-- Todo módulo nuevo debe mantener el soporte PWA offline.
-- Cero regresiones en tiempos de carga (LCP < 2.5s en móvil).
-- Mobile-first con soporte para gestos y viewport móvil estándar.
+- La app pública se mantiene Mobile-First, PWA y libre de autenticación.
+- El panel `/admin` es Desktop-First, Data-Dense y estrictamente protegido por Supabase Auth.
+- Cero regresiones en tiempos de carga en la aplicación pública.

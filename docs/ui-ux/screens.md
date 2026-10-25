@@ -53,3 +53,15 @@ Flujo y comportamiento visual de las pantallas de Cherotrip.
   - Si está vacío: Ilustración amigable y botón hacia el explorador.
 - **Modal Aportes de la Comunidad (`CommunityContributionModal`):**
   - Diálogo accesible para enviar recomendaciones de sitios o corregir datos sin salir de la vista actual.
+
+## 6. Panel Administrativo Interno (`/admin/*`) — Desktop-First
+
+- **Enfoque:** Diseñado para pantallas de escritorio (computadoras de oficina), priorizando densidad de información, rapidez de captura y claridad tabular.
+- **Rutas clave:**
+  - `/admin/login`: Formulario centrado y minimalista para ingreso por correo y contraseña.
+  - `/admin/dashboard`: Vista general con tarjetas de resumen métrico y accesos rápidos.
+  - `/admin/lugares` & `/admin/eventos`: Data-tables con paginación, filtros multicriterio, acciones rápidas (editar, eliminar, alternar publicado) y modales o pantallas completas de edición con `react-hook-form` + `zod`.
+  - `/admin/moderacion`: Bandeja de correo estilo split-view o tabla de aportes ciudadanos con botones de acción directa ("Aprobar como listing" o "Descartar").
+- **Layout:**
+  - Sidebar izquierdo oscuro/neutro (`w-64`) fijo con logo, menú de secciones y perfil/logout.
+  - Área de contenido central amplia (`bg-slate-50` o `bg-white`) con barra superior de acciones contextuales.
