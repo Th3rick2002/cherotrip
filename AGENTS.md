@@ -1,9 +1,10 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# Contexto del proyecto
 
-## This is NOT the Next.js you know
+Este proyecto usa documentación estructurada en `/docs`. Antes de actuar:
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+1. Lee `/docs/state/HANDOFF.md` — estado actual y siguiente acción.
+2. Lee `/docs/rules/*.md` — convenciones obligatorias.
+3. Consulta `/docs/specs/INDEX.md` solo si la tarea toca una feature.
 
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->
+No leas `/docs/changes/` ni `/docs/decisions/` salvo que se te pida.
+Al terminar tu turno, actualiza `/docs/state/HANDOFF.md`.
