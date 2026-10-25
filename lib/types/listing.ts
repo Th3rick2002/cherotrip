@@ -1,4 +1,5 @@
 export type ListingType = "event" | "place"
+export type CommunitySubmissionStatus = "pending" | "approved" | "rejected"
 
 export type Category = {
   id: number
@@ -28,10 +29,50 @@ export type Listing = {
   restrictions: string | null
   tags: string[]
   whatsapp_phone: string
+  instagram_url: string | null
+  facebook_url: string | null
+  tiktok_url: string | null
+  ticket_url: string | null
+  ticket_provider: string | null
+  accommodation_url: string | null
+  accommodation_search_query: string | null
   verified: boolean
   featured: boolean
   published_at: string | null
   categories?: Category[]
+}
+
+export type ActivityCategory = {
+  id: number
+  slug: string
+  name: string
+  sort_order: number
+  is_active: boolean
+}
+
+export type SubEvent = {
+  id: number
+  listing_id: number
+  event_date: string
+  start_time: string
+  end_time: string | null
+  title: string
+  description: string | null
+  venue: string | null
+  activity_category_id: number
+  sort_order: number
+  activity_category?: ActivityCategory
+}
+
+export type CommunitySubmission = {
+  id: number
+  place_name: string
+  department: string
+  comment: string
+  photo_path: string | null
+  contact_optional: string | null
+  status: CommunitySubmissionStatus
+  created_at: string
 }
 
 export const DEPARTMENTS = [
