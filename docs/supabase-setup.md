@@ -17,6 +17,25 @@ pnpm db:push
 pnpm db:types
 ```
 
+## Cuentas del panel admin (`/admin`)
+
+El registro público está desactivado. Para dar acceso a alguien:
+
+1. **Crear la cuenta:** Dashboard → Authentication → Users → *Add user* (correo y contraseña,
+   marcando *Auto Confirm User*), o *Invite user*.
+2. **Hacerla admin:** en el SQL Editor, con el correo de la cuenta:
+
+   ```sql
+   insert into public.admin_users (user_id)
+   select id from auth.users where email = 'persona@ejemplo.com';
+   ```
+
+Para quitar el acceso, borra su fila de `public.admin_users`. Una cuenta que existe pero no está
+en esa tabla puede iniciar sesión en Supabase, pero el panel la rechaza.
+
+En producción, confirma en Dashboard → Authentication → Sign In / Providers que *Allow new users
+to sign up* esté desactivado. `supabase/config.toml` solo aplica a la base local.
+
 ## Seed de prueba
 
 `supabase/seed.sql` agrega cuatro listings identificados como `[QA]` para revisar las funciones v3
