@@ -7,12 +7,10 @@ import { Menu } from "lucide-react"
 import { cn } from "cn"
 import { Button } from "@/components/ui/button"
 import { SideDrawer } from "@/components/layout/side-drawer"
-import { CommunityContributionDialog } from "@/components/community/community-contribution-dialog"
 import { isNavActive, MAIN_NAV } from "@/lib/nav"
 
 export function TopBar() {
   const [open, setOpen] = useState(false)
-  const [contributionOpen, setContributionOpen] = useState(false)
   const pathname = usePathname()
 
   return (
@@ -69,13 +67,8 @@ export function TopBar() {
         <SideDrawer
           open={open}
           onOpenChange={setOpen}
-          onContribute={() => setContributionOpen(true)}
         />
       </div>
-      <CommunityContributionDialog
-        open={contributionOpen}
-        onOpenChange={setContributionOpen}
-      />
     </>
   )
 }

@@ -58,11 +58,12 @@ NEXT_PUBLIC_SITE_URL=https://cherotrip.vercel.app
   - Issues #33–#35 implementadas y cerradas en GitHub en el commit `4a06da8`; la rama está sincronizada con `origin`.
   - Issues #36–#39 implementadas localmente: agenda multi-día, favoritos locales, Mis Guardados y aportes anónimos con fotos privadas.
   - Fixtures QA de detalle y nuevos aportes de prueba deben conservarse en Supabase para la revisión visual/manual del usuario; limpiar solo cuando lo confirme.
-  - Rediseño en curso: WhatsApp junto a redes; compra de entradas en tarjeta al final de la ficha del evento, sin barra fija. Modal de aportes queda fuera de este cambio.
+  - Rediseño de contacto: WhatsApp junto a redes; compra de entradas en tarjeta al final de la ficha del evento, sin barra fija.
+  - Los aportes comunitarios se presentan en `/aportar`, desde la navegación global y el drawer móvil; Home ya no muestra el banner y se conserva el flujo anónimo con Storage privado.
 
 ## 4. Próxima Tarea a Ejecutar
 
-👉 **Validar la implementación con la Issue [#40](https://github.com/Th3rick2002/cherotrip/issues/40): QA integral del MVP v3.**
+👉 **Validar visualmente `/aportar` y continuar con la Issue [#40](https://github.com/Th3rick2002/cherotrip/issues/40): QA integral del MVP v3.**
 - Las issues #36–#39 tienen implementación local pendiente de revisión visual/manual y cierre en GitHub tras la validación.
 - La limpieza de fotos huérfanas de Storage queda manual hasta que el panel admin defina el flujo.
 - Consulta de detalle incluye los campos v3; enlaces externos limitados a HTTP(S), con pestaña segura.

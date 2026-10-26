@@ -14,7 +14,6 @@ import {
   getUpcomingEvents,
 } from "@/lib/listings/queries"
 import { Skeleton } from "@/components/ui/skeleton"
-import { CommunityContributionEntry } from "@/components/community/community-contribution-entry"
 
 export default function HomePage() {
   return (
@@ -44,8 +43,6 @@ export default function HomePage() {
       <Suspense fallback={<CarouselSkeleton title="Lugares destacados" />}>
         <FeaturedSection />
       </Suspense>
-
-      <CommunityContributionEntry />
     </div>
   )
 }
