@@ -50,17 +50,22 @@ NEXT_PUBLIC_SITE_URL=https://cherotrip.vercel.app
 
 ## 3. Estado Actual del Repositorio
 
-- **Rama activa:** `feat/MigrationDB` (o `main`).
+- **Rama activa:** `feat/detail-contact-cta-redesign`, creada desde `feat/MigrationDB` después del commit `8340ef2`.
 - **Fase 1 Core:** 100% implementada y visible en producción.
 - **Fase 2 / v3:**
   - Issue #31 completada y cerrada (migración DB v3 en remoto).
   - Issue #32 descartada y cerrada (reemplazada por CMS).
-  - Issues #33–#35 implementadas y listas para cierre en GitHub; sus fixtures QA están publicados en Supabase MVP.
+  - Issues #33–#35 implementadas y cerradas en GitHub en el commit `4a06da8`; la rama está sincronizada con `origin`.
+  - Issues #36–#39 implementadas localmente: agenda multi-día, favoritos locales, Mis Guardados y aportes anónimos con fotos privadas.
+  - Fixtures QA de detalle y nuevos aportes de prueba deben conservarse en Supabase para la revisión visual/manual del usuario; limpiar solo cuando lo confirme.
+  - Rediseño de contacto: WhatsApp junto a redes; compra de entradas en tarjeta al final de la ficha del evento, sin barra fija.
+  - Los aportes comunitarios se presentan en `/aportar`, desde la navegación global y el drawer móvil; Home ya no muestra el banner y se conserva el flujo anónimo con Storage privado.
 
 ## 4. Próxima Tarea a Ejecutar
 
-👉 **Continuar con la Issue [#36](https://github.com/Th3rick2002/cherotrip/issues/36): `[v3][UI] EventAgenda — agenda multi-día con tabs y timeline para sub_events`**
-- Issues #33–#35 implementadas localmente: redes oficiales, banner de alojamiento y CTA dinámico.
+👉 **Validar visualmente `/aportar` y continuar con la Issue [#40](https://github.com/Th3rick2002/cherotrip/issues/40): QA integral del MVP v3.**
+- Las issues #36–#39 tienen implementación local pendiente de revisión visual/manual y cierre en GitHub tras la validación.
+- La limpieza de fotos huérfanas de Storage queda manual hasta que el panel admin defina el flujo.
 - Consulta de detalle incluye los campos v3; enlaces externos limitados a HTTP(S), con pestaña segura.
 - TypeScript y ESLint verificados; seed QA aplicada y comprobada en Supabase MVP.
 

@@ -11,7 +11,7 @@ Flujo y comportamiento visual de las pantallas de Cherotrip.
   - **Próximos Eventos:** Lista o carrusel de eventos con fechas destacadas.
   - **Servicios Rápidos:** Atajos a información esencial (cómo moverse, seguridad, tips de viaje).
   - **Tabs por Departamento:** Selector ágil de departamentos para descubrir lugares por zona geográfica sin salir del Home.
-  - **CTA Comunitario:** Banner o botón sutil hacia el modal "Aporta a la Comunidad".
+  - La invitación a recomendar lugares vive en la página `/aportar`, accesible desde la navegación global.
 
 ## 2. P2: Explorador y Búsqueda (Explorar)
 
@@ -30,11 +30,11 @@ Flujo y comportamiento visual de las pantallas de Cherotrip.
   - **Hero Multimedia:** Imagen de alta calidad con botones flotantes superiores: "Atrás" (`BackButton`) y "Compartir" (`ShareButton`).
   - **Cabecera:** Nombre, departamento, tipo de lugar/evento, badge de verificado y botón de favorito.
   - **Descripción:** Texto explicativo enriquecido.
-  - **Redes Oficiales (`SocialLinks`):** Fila de iconos discretos (Instagram, Facebook, TikTok) debajo de la descripción.
+  - **Redes y Contacto (`SocialLinks`):** Fila de iconos discretos (Instagram, Facebook, TikTok y WhatsApp) debajo de la descripción.
   - **Cuadrícula Logística 2×2:** Horarios, costo, transporte y accesibilidad.
-  - **Banner de Alojamiento (`AccommodationBanner`):** Enlace contextual a opciones de hospedaje cercanas (Airbnb/booking).
+  - **Alojamiento (`AccommodationBanner`):** Tarjeta blanca con botón azul e icono de hospedaje; referencia Airbnb para búsquedas y destinos alojados allí.
   - **Agenda de Eventos (`EventAgenda`):** (Solo eventos) Selector de días por tabs y timeline cronológico de actividades.
-  - **Sticky Bottom CTA (`DetailCta`):** Barra fija inferior que despliega el botón primario: Taquilla oficial (si hay venta de boletos) o WhatsApp directo.
+  - **Compra de entradas (`TicketPurchaseCta`):** Tarjeta azul al final del contenido de eventos con URL de taquilla válida. WhatsApp queda junto a las redes y no hay barra fija inferior.
 
 ## 4. Navegación Global
 
@@ -44,15 +44,15 @@ Flujo y comportamiento visual de las pantallas de Cherotrip.
   - Mis Guardados (con contador de favoritos)
   - Sobre Cherotrip / Misión
   - Contacto / FAQ
-  - Botón "Aportar a la comunidad"
+  - Enlace "Aporta a la comunidad" hacia `/aportar`.
 
-## 5. Próximas Pantallas (Fase 2)
+## 5. Pantallas Comunitarias
 
 - **Mis Guardados (`app/(main)/guardados/page.tsx`):**
   - Muestra la lista de tarjetas favoritas recuperadas de `localStorage`.
   - Si está vacío: Ilustración amigable y botón hacia el explorador.
-- **Modal Aportes de la Comunidad (`CommunityContributionModal`):**
-  - Diálogo accesible para enviar recomendaciones de sitios o corregir datos sin salir de la vista actual.
+- **Aportes de la Comunidad (`/aportar`):**
+  - Página independiente para recomendar lugares o eventos y recibir confirmación del envío.
 
 ## 6. Panel Administrativo Interno (`/admin/*`) — Desktop-First
 

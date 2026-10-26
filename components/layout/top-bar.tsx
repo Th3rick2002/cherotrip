@@ -64,7 +64,10 @@ export function TopBar() {
 
       {/* Drawer solo relevante en móvil */}
       <div className="md:hidden">
-        <SideDrawer open={open} onOpenChange={setOpen} />
+        <SideDrawer
+          open={open}
+          onOpenChange={setOpen}
+        />
       </div>
     </>
   )

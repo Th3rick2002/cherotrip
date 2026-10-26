@@ -58,9 +58,6 @@ export function SideDrawer({ open, onOpenChange }: SideDrawerProps) {
           })}
         </nav>
 
-        <p className="mt-auto px-5 py-4 text-xs text-muted-foreground">
-          Menú MVP simplificado — sin perfil, guardados ni notificaciones.
-        </p>
       </SheetContent>
     </Sheet>
   )

@@ -155,10 +155,10 @@ Orden interno (de más simple a más complejo):
 |---|---|---|
 | 2.1 | Redes oficiales | `SocialLinks.tsx` |
 | 2.2 | Banner alojamiento | `AccommodationBanner.tsx` |
-| 2.3 | CTA dinámico WhatsApp vs Taquilla | extender `WhatsAppCta` → `DetailCta.tsx` |
+| 2.3 | WhatsApp junto a redes + compra de tickets al final del evento | `SocialLinks.tsx` + `TicketPurchaseCta.tsx` |
 | 2.4 | Agenda tabs + timeline | `EventAgenda.tsx` + query `sub_eventos` |
 
-Todo se inyecta en `listing-detail.tsx` sin romper el CTA sticky actual.
+Todo se inyecta en `listing-detail.tsx`; WhatsApp no usa barra fija y la compra solo aparece como tarjeta contextual si hay taquilla válida.
 
 ### Bloque 3 — Fase 2 social light
 
@@ -229,7 +229,7 @@ Todo se inyecta en `listing-detail.tsx` sin romper el CTA sticky actual.
 Cuando digas “adelante”, el orden de implementación será:
 
 1. Migración DB + tipos + Excel  
-2. SocialLinks + AccommodationBanner + DetailCta  
+2. SocialLinks + AccommodationBanner + TicketPurchaseCta
 3. EventAgenda  
 4. Favoritos + Mis Guardados  
 5. Modal aportes_comunidad  

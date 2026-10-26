@@ -11,7 +11,7 @@ Inspirada en la costa y volcanes de El Salvador:
 | **Océano Profundo** | Primario de Marca | `bg-primary`, `text-primary` | `#0f172a` / `#1e3a8a` | Header, títulos principales, fondos de héroes, acentos institucionales. |
 | **Azul Taquilla** | Acción Comercial | `bg-blue-600`, `hover:bg-blue-700` | `#2563eb` | Botón "Comprar entradas" en eventos con taquilla online. |
 | **Arena / Dorado** | Secundario / Acento | `bg-amber-100`, `text-amber-800` | `#fef3c7` / `#d97706` | Badges de destacados, chips de filtro activo, estrellas/ratings. |
-| **Verde WhatsApp** | Conversión Exclusiva | `bg-emerald-600`, `hover:bg-emerald-700` | `#10b981` / `#25d366` | **Uso reservado exclusivamente** para el CTA de WhatsApp (`wa.me`). No usar en otros botones genéricos para preservar su valor visual. |
+| **Verde WhatsApp** | Contacto por WhatsApp | `text-whatsapp`, `bg-whatsapp` | `#25d366` | Reservado para el icono/enlace directo a WhatsApp (`wa.me`); no usar en controles genéricos. |
 | **Gris Fondo** | Canvas / Neutro | `bg-slate-50`, `bg-zinc-100` | `#f8fafc` | Fondo general de la aplicación. |
 | **Superficie** | Cards / Modales | `bg-white`, `border-slate-200` | `#ffffff` | Tarjetas de lugares, drawers, sheets y modales. |
 
@@ -25,10 +25,13 @@ Inspirada en la costa y volcanes de El Salvador:
 
 ## 3. Componentes Base y Patrones
 
-### A. Botón Sticky CTA (`DetailCta`)
-- Posición fija en la base de la pantalla móvil (`fixed bottom-0 inset-x-0 p-4 bg-white/95 backdrop-blur border-t`).
-- Padding seguro para dispositivos con barra de gestos (`pb-safe` o `safe-area-bottom`).
-- Elevación mediante sombra sutil (`shadow-lg`).
+### A. Contacto y compra en la ficha
+- WhatsApp se agrupa con Instagram, Facebook y TikTok debajo de la descripción como icono circular accesible.
+- Todos los iconos tienen el mismo tamaño y control circular; cada marca conserva su color reconocible.
+- Eventos con `ticket_url` válida muestran una tarjeta de compra azul al final del contenido, después de la agenda y los detalles.
+- La tarjeta usa superficie blanca, conserva el botón azul y no presenta `ticket_provider` como badge.
+- El alojamiento recomendado usa la misma tarjeta blanca y botón azul, con iconografía neutra de hospedaje y una referencia textual a Airbnb solo cuando corresponde.
+- La compra no queda fija sobre el viewport ni comparte el espacio con el contacto por WhatsApp.
 
 ### B. Chips de Categoría (`CategoryChip`)
 - Píldoras redondeadas (`rounded-full px-3.5 py-1.5 text-xs font-medium`).

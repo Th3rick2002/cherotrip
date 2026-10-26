@@ -21,8 +21,9 @@ Permitir al usuario armar su propio itinerario o lista de deseos durante su viaj
   - Recupera los IDs del almacenamiento local y consulta los listings correspondientes.
   - Estado vacío: cuando no hay guardados, muestra mensaje motivacional y botón directo hacia el explorador.
 
-### C. Modal "Aporta a la Comunidad" — Issue #39
+### C. Página "Aporta a la Comunidad" — Issue #39
 - **Tabla DB:** `community_submissions` (`place_name`, `department`, `comment`, `photo_path`, `contact_optional`, `status = 'pending'`).
 - **Seguridad RLS:** Rol `anon` cuenta únicamente con permisos limitados de `INSERT`. No hay permisos de lectura pública ni edición para proteger la privacidad de los contactos.
-- **UI:** Formulario modal accesible desde el Home y el menú lateral.
-- **Flujo:** Al enviar, muestra confirmación de agradecimiento inmediata sin refrescar la página. La foto se carga al bucket privado `community-submission-photos` y Turismo revisa los aportes desde el Dashboard o el CMS.
+- **UI:** Página independiente `/aportar`, accesible desde la navegación de escritorio y el menú lateral móvil. Incluye nombre, departamento, comentario, contacto opcional y foto opcional. Home no muestra un banner de aportes.
+- **Fotos:** Carga al bucket privado `community-submission-photos`, solo JPG/PNG/WebP/AVIF hasta 5 MiB. La fila guarda el nombre del objeto en `photo_path`; no se expone una URL pública.
+- **Flujo:** Al enviar, muestra confirmación de agradecimiento sin refrescar la página. La fila usa el estado `pending` por defecto y Turismo revisa los aportes desde el Dashboard o el CMS.

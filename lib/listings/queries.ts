@@ -1,6 +1,12 @@
 import { cacheLife } from "next/cache"
 import { createPublicClient } from "@/lib/supabase/public"
-import { DEPARTMENTS, type Category, type Listing } from "@/lib/types/listing"
+import {
+  DEPARTMENTS,
+  type ActivityCategory,
+  type Category,
+  type Listing,
+  type SubEvent,
+} from "@/lib/types/listing"
 
 type ListingRow = Listing & {
   listing_categories?: { categories: Category | Category[] | null }[] | null
@@ -17,7 +23,8 @@ function mapListing(row: ListingRow): Listing {
       })
       .filter(Boolean) ?? []
 
-  const { listing_categories: _ignored, ...listing } = row
+  const listing = { ...row }
+  delete listing.listing_categories
   return { ...listing, categories }
 }
 
@@ -254,4 +261,53 @@ export async function getListingBySlug(
   }
   if (!data) return null
   return mapListing(data as ListingRow)
+}
+
+export async function getSubEvents(listingId: number): Promise<SubEvent[]> {
+  "use cache"
+  cacheLife("minutes")
+
+  const supabase = createPublicClient()
+  const { data, error } = await supabase
+    .from("sub_events")
+    .select(
+      "id, listing_id, event_date, start_time, end_time, title, description, venue, activity_category_id, sort_order, activity_categories ( id, slug, name, sort_order, is_active )"
+    )
+    .eq("listing_id", listingId)
+    .order("event_date", { ascending: true })
+    .order("start_time", { ascending: true })
+    .order("sort_order", { ascending: true })
+
+  if (error) {
+    console.error("getSubEvents", error.message)
+    return []
+  }
+
+  return (data ?? []).map((row) => {
+    const category = row.activity_categories
+    return {
+      ...row,
+      activity_category: (Array.isArray(category) ? category[0] : category) as
+        | ActivityCategory
+        | null,
+    } as SubEvent
+  })
+}
+
+export async function getListingsByIds(ids: number[]): Promise<Listing[]> {
+  if (ids.length === 0) return []
+
+  const supabase = createPublicClient()
+  const { data, error } = await supabase
+    .from("listings")
+    .select(listingSelect)
+    .eq("is_published", true)
+    .in("id", ids)
+
+  if (error) {
+    console.error("getListingsByIds", error.message)
+    return []
+  }
+
+  return (data as ListingRow[] | null)?.map(mapListing) ?? []
 }
