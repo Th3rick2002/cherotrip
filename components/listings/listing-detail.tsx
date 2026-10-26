@@ -6,7 +6,7 @@ import {
   Ticket,
   Users,
 } from "lucide-react"
-import type { Listing } from "@/lib/types/listing"
+import type { Listing, SubEvent } from "@/lib/types/listing"
 import { formatEventWhen, formatPriceFrom } from "@/lib/format"
 import { AccommodationBanner } from "@/components/listings/accommodation-banner"
 import { DetailCta } from "@/components/listings/detail-cta"
@@ -14,6 +14,8 @@ import { SocialLinks } from "@/components/listings/social-links"
 import { ShareButton } from "@/components/listings/share-button"
 import { BackButton } from "@/components/listings/back-button"
 import { CoverImage } from "@/components/listings/cover-image"
+import { EventAgenda } from "@/components/listings/event-agenda"
+import { FavoriteButton } from "@/components/listings/favorite-button"
 
 function extrasLabel(extras: Record<string, unknown>): string {
   const labels: string[] = []
@@ -28,7 +30,13 @@ function extrasLabel(extras: Record<string, unknown>): string {
   return labels.length > 0 ? labels.join(", ") : "Detalles con el anfitrión"
 }
 
-export function ListingDetail({ listing }: { listing: Listing }) {
+export function ListingDetail({
+  listing,
+  subEvents = [],
+}: {
+  listing: Listing
+  subEvents?: SubEvent[]
+}) {
   const when =
     listing.type === "event"
       ? formatEventWhen(listing.starts_at)
@@ -64,7 +72,7 @@ export function ListingDetail({ listing }: { listing: Listing }) {
                 aria-label="Verificado por Cherotrip"
               />
             ) : null}
-            <div className="min-w-0 space-y-1">
+            <div className="min-w-0 flex-1 space-y-1">
               <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
                 {listing.title}
               </h1>
@@ -73,6 +81,7 @@ export function ListingDetail({ listing }: { listing: Listing }) {
                 {listing.department} · Oriente SV
               </p>
             </div>
+            <FavoriteButton listingId={listing.id} className="shrink-0" />
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -132,6 +141,10 @@ export function ListingDetail({ listing }: { listing: Listing }) {
         </section>
 
         <AccommodationBanner listing={listing} />
+
+        {listing.type === "event" && subEvents.length > 0 ? (
+          <EventAgenda items={subEvents} />
+        ) : null}
 
         {listing.restrictions ? (
           <div className="rounded-2xl border border-sand-strong/30 bg-sand-strong/10 px-4 py-3 text-sm text-foreground">

@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { Suspense } from "react"
 import { notFound } from "next/navigation"
 import { ListingDetail } from "@/components/listings/listing-detail"
-import { getListingBySlug } from "@/lib/listings/queries"
+import { getListingBySlug, getSubEvents } from "@/lib/listings/queries"
 import { listingMetadata } from "@/lib/seo"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -31,7 +31,8 @@ async function EventoContent({ params }: Props) {
   const { slug } = await params
   const listing = await getListingBySlug(slug)
   if (!listing || listing.type !== "event") notFound()
-  return <ListingDetail listing={listing} />
+  const subEvents = await getSubEvents(listing.id)
+  return <ListingDetail listing={listing} subEvents={subEvents} />
 }
 
 function DetailSkeleton() {

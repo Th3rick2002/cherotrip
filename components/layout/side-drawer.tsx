@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, HeartHandshake } from "lucide-react"
 import { cn } from "cn"
 import {
   Sheet,
@@ -16,9 +16,10 @@ import { isNavActive, MAIN_NAV } from "@/lib/nav"
 type SideDrawerProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
+  onContribute: () => void
 }
 
-export function SideDrawer({ open, onOpenChange }: SideDrawerProps) {
+export function SideDrawer({ open, onOpenChange, onContribute }: SideDrawerProps) {
   const pathname = usePathname()
 
   return (
@@ -58,9 +59,19 @@ export function SideDrawer({ open, onOpenChange }: SideDrawerProps) {
           })}
         </nav>
 
-        <p className="mt-auto px-5 py-4 text-xs text-muted-foreground">
-          Menú MVP simplificado — sin perfil, guardados ni notificaciones.
-        </p>
+        <div className="mt-auto border-t border-border p-4">
+          <button
+            type="button"
+            onClick={() => {
+              onOpenChange(false)
+              onContribute()
+            }}
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+          >
+            <HeartHandshake aria-hidden="true" className="size-4" />
+            Aporta a la comunidad
+          </button>
+        </div>
       </SheetContent>
     </Sheet>
   )

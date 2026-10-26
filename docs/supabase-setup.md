@@ -19,9 +19,11 @@ pnpm db:types
 
 ## Seed de prueba
 
-`supabase/seed.sql` agrega tres listings identificados como `[QA]` para revisar las funciones v3
-de detalle. `ON CONFLICT (slug) DO NOTHING` evita modificar listings existentes. Los tres están
-publicados para que se puedan abrir desde las rutas públicas; no son datos turísticos reales.
+`supabase/seed.sql` agrega cuatro listings identificados como `[QA]` para revisar las funciones v3
+de detalle y social-light. `ON CONFLICT (slug) DO NOTHING` evita modificar listings existentes;
+los sub-eventos también se insertan solo si aún no existen. Los fixtures están publicados para
+abrirse desde las rutas públicas y no son datos turísticos reales. Consérvalos durante la revisión
+visual/manual y elimínalos solo cuando el usuario confirme que terminó.
 
 Para cargarla en el proyecto remoto ya vinculado, ejecuta solo el SQL de la seed:
 
@@ -40,6 +42,7 @@ Rutas para revisar los fixtures:
 
 - `/evento/qa-v3-ticket-social-accommodation`: taquilla, tres redes y URL directa de alojamiento
   (la URL directa debe tener prioridad frente a la consulta).
+- `/evento/qa-v3-event-agenda`: evento de dos días con actividades en dos fechas, horas, categorías y sedes.
 - `/lugar/qa-v3-airbnb-search-whatsapp`: búsqueda Airbnb, una red y CTA de WhatsApp.
 - `/lugar/qa-v3-no-optional-links`: secciones opcionales ocultas y CTA de WhatsApp.
 

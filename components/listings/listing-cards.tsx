@@ -3,6 +3,7 @@ import { CalendarClock } from "lucide-react"
 import type { Listing } from "@/lib/types/listing"
 import { formatEventWhen, formatPriceFrom } from "@/lib/format"
 import { CoverImage } from "@/components/listings/cover-image"
+import { FavoriteButton } from "@/components/listings/favorite-button"
 
 function listingHref(listing: Listing) {
   return listing.type === "event"
@@ -20,10 +21,9 @@ export function EventCard({
   const when = formatEventWhen(listing.starts_at)
 
   return (
-    <Link
-      href={listingHref(listing)}
-      className="block w-[16.5rem] shrink-0 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm transition hover:shadow-md sm:w-[18rem]"
-    >
+    <article className="relative block w-[16.5rem] shrink-0 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm transition hover:shadow-md sm:w-[18rem]">
+      <FavoriteButton listingId={listing.id} className="absolute top-3 right-3 z-10" />
+      <Link href={listingHref(listing)} className="block">
       <div className="relative aspect-[4/3] bg-muted">
         <CoverImage
           src={listing.cover_image_url}
@@ -45,7 +45,8 @@ export function EventCard({
           {[when, listing.department].filter(Boolean).join(" · ")}
         </p>
       </div>
-    </Link>
+      </Link>
+    </article>
   )
 }
 
@@ -59,10 +60,9 @@ export function PlaceCard({
   const category = listing.categories?.[0]?.name
 
   return (
-    <Link
-      href={listingHref(listing)}
-      className="block w-[14rem] shrink-0 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm transition hover:shadow-md sm:w-[16rem]"
-    >
+    <article className="relative block w-[14rem] shrink-0 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm transition hover:shadow-md sm:w-[16rem]">
+      <FavoriteButton listingId={listing.id} className="absolute top-3 right-3 z-10" />
+      <Link href={listingHref(listing)} className="block">
       <div className="relative aspect-[5/4] bg-muted">
         <CoverImage
           src={listing.cover_image_url}
@@ -80,7 +80,8 @@ export function PlaceCard({
           {[listing.department, category].filter(Boolean).join(" · ")}
         </p>
       </div>
-    </Link>
+      </Link>
+    </article>
   )
 }
 
@@ -93,10 +94,9 @@ export function DirectoryCard({ listing }: { listing: Listing }) {
   const access = listing.transport_info?.split(/[·,]/)[0]?.trim()
 
   return (
-    <Link
-      href={listingHref(listing)}
-      className="flex gap-3 rounded-2xl border border-border/70 bg-card p-3 shadow-sm transition hover:shadow-md"
-    >
+    <article className="relative rounded-2xl border border-border/70 bg-card p-3 shadow-sm transition hover:shadow-md">
+      <FavoriteButton listingId={listing.id} className="absolute top-4 right-4 z-10" />
+      <Link href={listingHref(listing)} className="flex gap-3 pr-9">
       <div className="relative size-24 shrink-0 overflow-hidden rounded-xl bg-muted sm:size-28">
         <CoverImage
           src={listing.cover_image_url}
@@ -116,6 +116,7 @@ export function DirectoryCard({ listing }: { listing: Listing }) {
           {[price, access].filter(Boolean).join(" · ")}
         </p>
       </div>
-    </Link>
+      </Link>
+    </article>
   )
 }
