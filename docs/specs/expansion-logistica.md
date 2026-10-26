@@ -9,9 +9,9 @@ Resolver dudas críticas del viajero antes de trasladarse: cómo comprar entrada
 ## 2. Componentes y Módulos
 
 ### A. Redes Oficiales (`SocialLinks`) — Issue #33
-- **Campos DB:** `instagram_url`, `facebook_url`, `tiktok_url` en `listings`.
+- **Campos DB:** `instagram_url`, `facebook_url`, `tiktok_url`, `whatsapp_phone` en `listings`.
 - **Formato:** Iconos monocromos discretos en controles circulares de 40 px, con nombres accesibles para lectores de pantalla.
-- **Comportamiento:** Renderiza solo los enlaces con URL HTTP(S) válida. Si no hay enlaces válidos, el componente no ocupa espacio.
+- **Comportamiento:** Renderiza solo los enlaces sociales con URL HTTP(S) válida y añade WhatsApp si hay teléfono válido, construyendo un enlace `wa.me` con mensaje prearmado.
 - **Ubicación:** Inmediatamente debajo de la descripción general, antes de la cuadrícula logística.
 - **Enlaces:** Abrir en pestaña nueva con `rel="noopener noreferrer"`.
 
@@ -19,16 +19,15 @@ Resolver dudas críticas del viajero antes de trasladarse: cómo comprar entrada
 - **Campos DB:** `accommodation_url` (URL directa de hospedaje) y/o `accommodation_search_query` (ej. `San-Miguel--El-Salvador`).
 - **Precedencia:** `accommodation_url` válida gana; si falta, usar búsqueda Airbnb con el municipio codificado en `/s/{query}/homes`.
 - **Comportamiento:** La tarjeta se oculta si no hay URL directa ni consulta de búsqueda válida.
-- **Formato:** Icono de hospedaje, título corto, ubicación y flecha externa; mantiene la paleta neutra/océano y no compite con el CTA sticky.
+- **Formato:** Tarjeta blanca con icono neutro de hospedaje y botón azul, consistente con la tarjeta de entradas. Menciona Airbnb solo para búsquedas de Airbnb o URLs directas alojadas en ese dominio.
 - **Ubicación:** Debajo de la cuadrícula logística, que incluye transporte y accesibilidad.
 - **Enlaces:** Abrir en pestaña nueva con `rel="noopener noreferrer"`.
 
-### C. CTA Dinámico Taquilla vs WhatsApp (`DetailCta`) — Issue #35
+### C. Compra de entradas contextual (`TicketPurchaseCta`) — rediseño
 - **Campos DB:** `ticket_url`, `ticket_provider` en `listings`.
-- **Regla:**
-  - Si `ticket_url` es HTTP(S) válida: botón primario azul "Comprar entradas", con `ticket_provider` como distintivo si existe.
-  - Si no existe o no es válida: mantener el botón primario verde de WhatsApp (`wa.me`).
-- **Restricción:** Mostrar un solo CTA sticky principal; la ticketera reemplaza a WhatsApp cuando hay una URL válida.
+- **Regla:** Solo eventos con `ticket_url` HTTP(S) válida muestran la tarjeta blanca "Comprar entradas" con botón azul. No se muestra `ticket_provider` en la interfaz.
+- **Ubicación:** Al final del contenido de la ficha, debajo de agenda y detalles; no es sticky.
+- **Contacto:** WhatsApp aparece junto a las redes oficiales como icono circular independiente de la acción de compra.
 - **Enlaces externos:** Abrir en pestaña nueva con `rel="noopener noreferrer"`.
 
 ### D. Agenda Compleja / Sub-eventos (`EventAgenda`) — Issue #36

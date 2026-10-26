@@ -30,11 +30,11 @@ Flujo y comportamiento visual de las pantallas de Cherotrip.
   - **Hero Multimedia:** Imagen de alta calidad con botones flotantes superiores: "Atrás" (`BackButton`) y "Compartir" (`ShareButton`).
   - **Cabecera:** Nombre, departamento, tipo de lugar/evento, badge de verificado y botón de favorito.
   - **Descripción:** Texto explicativo enriquecido.
-  - **Redes Oficiales (`SocialLinks`):** Fila de iconos discretos (Instagram, Facebook, TikTok) debajo de la descripción.
+  - **Redes y Contacto (`SocialLinks`):** Fila de iconos discretos (Instagram, Facebook, TikTok y WhatsApp) debajo de la descripción.
   - **Cuadrícula Logística 2×2:** Horarios, costo, transporte y accesibilidad.
-  - **Banner de Alojamiento (`AccommodationBanner`):** Enlace contextual a opciones de hospedaje cercanas (Airbnb/booking).
+  - **Alojamiento (`AccommodationBanner`):** Tarjeta blanca con botón azul e icono de hospedaje; referencia Airbnb para búsquedas y destinos alojados allí.
   - **Agenda de Eventos (`EventAgenda`):** (Solo eventos) Selector de días por tabs y timeline cronológico de actividades.
-  - **Sticky Bottom CTA (`DetailCta`):** Barra fija inferior que despliega el botón primario: Taquilla oficial (si hay venta de boletos) o WhatsApp directo.
+  - **Compra de entradas (`TicketPurchaseCta`):** Tarjeta azul al final del contenido de eventos con URL de taquilla válida. WhatsApp queda junto a las redes y no hay barra fija inferior.
 
 ## 4. Navegación Global
 

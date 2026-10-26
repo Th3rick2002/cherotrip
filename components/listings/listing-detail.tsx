@@ -9,13 +9,13 @@ import {
 import type { Listing, SubEvent } from "@/lib/types/listing"
 import { formatEventWhen, formatPriceFrom } from "@/lib/format"
 import { AccommodationBanner } from "@/components/listings/accommodation-banner"
-import { DetailCta } from "@/components/listings/detail-cta"
 import { SocialLinks } from "@/components/listings/social-links"
 import { ShareButton } from "@/components/listings/share-button"
 import { BackButton } from "@/components/listings/back-button"
 import { CoverImage } from "@/components/listings/cover-image"
 import { EventAgenda } from "@/components/listings/event-agenda"
 import { FavoriteButton } from "@/components/listings/favorite-button"
+import { TicketPurchaseCta } from "@/components/listings/ticket-purchase-cta"
 
 function extrasLabel(extras: Record<string, unknown>): string {
   const labels: string[] = []
@@ -63,7 +63,7 @@ export function ListingDetail({
         </div>
       </div>
 
-      <div className="mx-auto max-w-5xl space-y-6 px-4 pt-5 pb-28 sm:px-6 sm:pt-8">
+      <div className="mx-auto max-w-5xl space-y-6 px-4 pt-5 pb-8 sm:px-6 sm:pt-8">
         <header className="space-y-3">
           <div className="flex items-start gap-2">
             {listing.verified ? (
@@ -151,12 +151,8 @@ export function ListingDetail({
             {listing.restrictions}
           </div>
         ) : null}
-      </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card/95 p-4 backdrop-blur sm:static sm:mt-2 sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
-        <div className="mx-auto max-w-5xl sm:px-6">
-          <DetailCta listing={listing} />
-        </div>
+        <TicketPurchaseCta listing={listing} />
       </div>
     </article>
   )

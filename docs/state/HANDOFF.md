@@ -50,7 +50,7 @@ NEXT_PUBLIC_SITE_URL=https://cherotrip.vercel.app
 
 ## 3. Estado Actual del Repositorio
 
-- **Rama activa:** `feat/MigrationDB` (o `main`).
+- **Rama activa:** `feat/detail-contact-cta-redesign`, creada desde `feat/MigrationDB` después del commit `8340ef2`.
 - **Fase 1 Core:** 100% implementada y visible en producción.
 - **Fase 2 / v3:**
   - Issue #31 completada y cerrada (migración DB v3 en remoto).
@@ -58,6 +58,7 @@ NEXT_PUBLIC_SITE_URL=https://cherotrip.vercel.app
   - Issues #33–#35 implementadas y cerradas en GitHub en el commit `4a06da8`; la rama está sincronizada con `origin`.
   - Issues #36–#39 implementadas localmente: agenda multi-día, favoritos locales, Mis Guardados y aportes anónimos con fotos privadas.
   - Fixtures QA de detalle y nuevos aportes de prueba deben conservarse en Supabase para la revisión visual/manual del usuario; limpiar solo cuando lo confirme.
+  - Rediseño en curso: WhatsApp junto a redes; compra de entradas en tarjeta al final de la ficha del evento, sin barra fija. Modal de aportes queda fuera de este cambio.
 
 ## 4. Próxima Tarea a Ejecutar
 
