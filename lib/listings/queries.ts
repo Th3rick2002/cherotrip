@@ -21,11 +21,24 @@ function mapListing(row: ListingRow): Listing {
   return { ...listing, categories }
 }
 
-const listingSelect = `
+const listingColumns = `
   id, slug, type, title, description, department, meeting_point,
   cover_image_url, starts_at, ends_at, schedule_text, price_from,
   payment_methods, transport_info, accessibility_notes, extras,
-  restrictions, tags, whatsapp_phone, verified, featured, published_at,
+  restrictions, tags, whatsapp_phone, verified, featured, published_at
+`
+
+const listingSelect = `
+  ${listingColumns},
+  listing_categories (
+    categories ( id, slug, name, icon, sort_order )
+  )
+`
+
+const listingDetailSelect = `
+  ${listingColumns},
+  instagram_url, facebook_url, tiktok_url, ticket_url, ticket_provider,
+  accommodation_url, accommodation_search_query,
   listing_categories (
     categories ( id, slug, name, icon, sort_order )
   )
@@ -230,7 +243,7 @@ export async function getListingBySlug(
   const supabase = createPublicClient()
   const { data, error } = await supabase
     .from("listings")
-    .select(listingSelect)
+    .select(listingDetailSelect)
     .eq("slug", slug)
     .eq("is_published", true)
     .maybeSingle()

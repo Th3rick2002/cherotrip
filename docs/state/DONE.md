@@ -35,7 +35,11 @@ Registro de hitos y tareas finalizadas recientemente en el proyecto.
 
 ### Backlog v3 y Migraciones (Octubre 2026)
 
-- [x] **[#31](https://github.com/Th3rick2002/cherotrip/issues/31) Migración DB v3:** Ampliadas columnas en `listings` (redes, taquilla, alojamiento), creadas tablas `sub_eventos` y `aportes_comunidad` con índices y políticas RLS.
+- [x] **[#31](https://github.com/Th3rick2002/cherotrip/issues/31) Migración DB v3:** Ampliadas columnas en `listings` (redes, taquilla, alojamiento), creadas tablas `activity_categories`, `sub_events` y `community_submissions` con índices y políticas RLS; creado bucket privado `community-submission-photos`.
+- [x] **[#33](https://github.com/Th3rick2002/cherotrip/issues/33) SocialLinks:** Enlaces oficiales seguros de Instagram, Facebook y TikTok en la ficha.
+- [x] **[#34](https://github.com/Th3rick2002/cherotrip/issues/34) AccommodationBanner:** Banner de alojamiento con prioridad a URL directa y búsqueda Airbnb de respaldo.
+- [x] **[#35](https://github.com/Th3rick2002/cherotrip/issues/35) DetailCta:** CTA sticky de taquilla que reemplaza WhatsApp cuando la URL es válida.
+- [x] **Fixtures QA v3:** Tres listings publicados en el proyecto Supabase del MVP para comprobar las variantes de detalle.
 - [x] **Cancelación y Reemplazo de [#32](https://github.com/Th3rick2002/cherotrip/issues/32):** Descartado flujo manual de Excel en favor del Panel Administrativo CMS.
 - [x] **Especificación e Issues del Panel Admin (CMS):** Creadas en GitHub las issues #41 (Auth), #42 (Storage), #43 (CRUDs) y #44 (Moderación).
 - [x] **Reestructuración Integral de `/docs/`:** Normalización con `rules/`, `ui-ux/`, `specs/`, `decisions/`, `changes/` y `state/`.

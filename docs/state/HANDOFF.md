@@ -29,12 +29,17 @@ pnpm db:login
 # Vincular con proyecto remoto
 pnpm db:link
 
-# Aplicar migraciones y seed
+# Aplicar migraciones al proyecto remoto
 pnpm db:push
 
 # Regenerar tipos TypeScript
 pnpm db:types
 ```
+
+`supabase/seed.sql` contiene tres listings `[QA]` para las variantes v3 de detalle. Ya se cargaron
+publicados en el proyecto Supabase del MVP; se pueden abrir desde las rutas documentadas en
+[docs/supabase-setup.md](../supabase-setup.md). Ese archivo también explica cómo ejecutarlo solo
+en el remoto o en la base local.
 
 ### Variables de Entorno (`.env.local` y Vercel)
 ```env
@@ -50,14 +55,14 @@ NEXT_PUBLIC_SITE_URL=https://cherotrip.vercel.app
 - **Fase 2 / v3:**
   - Issue #31 completada y cerrada (migración DB v3 en remoto).
   - Issue #32 descartada y cerrada (reemplazada por CMS).
-  - Issues activas en GitHub: 17 abiertas (5 soft launch, 8 v3 público, 4 CMS admin).
+  - Issues #33–#35 implementadas y listas para cierre en GitHub; sus fixtures QA están publicados en Supabase MVP.
 
 ## 4. Próxima Tarea a Ejecutar
 
-👉 **Tomar la Issue [#33](https://github.com/Th3rick2002/cherotrip/issues/33): `[v3][UI] SocialLinks — redes oficiales en ficha de detalle` (Bloque 2.1)**
-- Crear el componente `SocialLinks.tsx` en `components/listings/`.
-- Renderizar condicionalmente iconos minimalistas para Instagram, Facebook y TikTok oficiales (usando los nuevos campos de la migración #31).
-- Integrar en `listing-detail.tsx` debajo de la descripción general, sin romper la cuadrícula logística ni el CTA sticky.
+👉 **Continuar con la Issue [#36](https://github.com/Th3rick2002/cherotrip/issues/36): `[v3][UI] EventAgenda — agenda multi-día con tabs y timeline para sub_events`**
+- Issues #33–#35 implementadas localmente: redes oficiales, banner de alojamiento y CTA dinámico.
+- Consulta de detalle incluye los campos v3; enlaces externos limitados a HTTP(S), con pestaña segura.
+- TypeScript y ESLint verificados; seed QA aplicada y comprobada en Supabase MVP.
 
 ## 5. Dónde leer más
 

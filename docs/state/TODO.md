@@ -23,11 +23,11 @@ Backlog activo ordenado por bloques de ejecución recomendados.
 
 ## Bloque 2 — Expansión Ficha de Detalle P3 (Público)
 
-- [ ] **[#33](https://github.com/Th3rick2002/cherotrip/issues/33)** `[v3][UI] SocialLinks — redes oficiales en ficha de detalle` (`P0`)
+- [x] **[#33](https://github.com/Th3rick2002/cherotrip/issues/33)** `[v3][UI] SocialLinks — redes oficiales en ficha de detalle` (`P0`)
   - Componente de iconos minimalistas Instagram / Facebook / TikTok.
-- [ ] **[#34](https://github.com/Th3rick2002/cherotrip/issues/34)** `[v3][UI] AccommodationBanner — banner de alojamiento (Airbnb/hotel)` (`P1`)
+- [x] **[#34](https://github.com/Th3rick2002/cherotrip/issues/34)** `[v3][UI] AccommodationBanner — banner de alojamiento (Airbnb/hotel)` (`P1`)
   - Enlace contextual de hospedaje bajo sección de transporte.
-- [ ] **[#35](https://github.com/Th3rick2002/cherotrip/issues/35)** `[v3][UI] DetailCta — CTA dinámico WhatsApp vs Taquilla` (`P0`)
+- [x] **[#35](https://github.com/Th3rick2002/cherotrip/issues/35)** `[v3][UI] DetailCta — CTA dinámico WhatsApp vs Taquilla` (`P0`)
   - Extender `WhatsAppCta` para priorizar compra de entradas en eventos con ticketera.
 - [ ] **[#36](https://github.com/Th3rick2002/cherotrip/issues/36)** `[v3][UI] EventAgenda — agenda multi-día con tabs y timeline para sub_eventos` (`P0`)
   - Selector de días y lista cronológica de actividades por sede.

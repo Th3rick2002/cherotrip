@@ -15,8 +15,8 @@ Rutas privadas agrupadas bajo el layout `/admin`:
 - `/admin/login`: Pantalla de acceso mediante correo y contraseña.
 - `/admin/dashboard`: Métricas resumidas (total listings activos, eventos vigentes, aportes pendientes).
 - `/admin/lugares`: Tabla densa y formulario CRUD de lugares turísticos.
-- `/admin/eventos`: Tabla densa y formulario CRUD de eventos y agenda `sub_eventos`.
-- `/admin/moderacion`: Bandeja de entrada para revisar y aprobar `aportes_comunidad`.
+- `/admin/eventos`: Tabla densa y formulario CRUD de eventos y agenda `sub_events`.
+- `/admin/moderacion`: Bandeja de entrada para revisar y aprobar `community_submissions`.
 
 ## 3. Módulos y Requerimientos
 
@@ -31,12 +31,12 @@ Rutas privadas agrupadas bajo el layout `/admin`:
 - **Formularios React Hook Form + Zod:**
   - Datos generales: título, slug, tipo (`lugar` o `evento`), departamento, categoría, descripción.
   - Logística y costos: precios, horarios, cómo llegar (buses/vehículos), nivel de accesibilidad.
-  - Campos v3: redes oficiales (`link_instagram`, `link_facebook`, `link_tiktok`), taquilla (`link_taquilla`, `proveedor_taquilla`), hospedaje (`link_alojamiento`, `municipio_busqueda`).
-  - Agenda multi-día: creador dinámico de filas para `sub_eventos`.
+  - Campos v3: redes oficiales (`instagram_url`, `facebook_url`, `tiktok_url`), taquilla (`ticket_url`, `ticket_provider`), hospedaje (`accommodation_url`, `accommodation_search_query`).
+  - Agenda multi-día: creador dinámico de filas para `sub_events`, usando `activity_categories`.
 - **UI Data-Dense:** Tablas de `shadcn/ui` con filtros rápidos, búsqueda en tiempo real y paginación.
 - **Feedback:** Notificaciones tipo Toast (`Sonner`) ante acciones de guardado o error.
 
 ### Módulo C: Moderación Comunitaria (Issue #44)
-- **Bandeja de Aportes:** Lista de registros de `aportes_comunidad` en estado `pendiente`.
+- **Bandeja de Aportes:** Lista de registros de `community_submissions` en estado `pending`.
 - **Acción "Aprobar":** Abre el formulario de listing prellenado con la información sugerida por el usuario y actualiza el estado a `aprobado`.
 - **Acción "Rechazar":** Cambia el estado a `rechazado` o elimina la fila si es contenido basura/spam.

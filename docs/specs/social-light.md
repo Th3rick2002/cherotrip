@@ -22,7 +22,7 @@ Permitir al usuario armar su propio itinerario o lista de deseos durante su viaj
   - Estado vacío: cuando no hay guardados, muestra mensaje motivacional y botón directo hacia el explorador.
 
 ### C. Modal "Aporta a la Comunidad" — Issue #39
-- **Tabla DB:** `aportes_comunidad` (`nombre_lugar`, `departamento`, `comentario`, `foto_url`, `contacto_opcional`, `estado = 'pendiente'`).
-- **Seguridad RLS:** Rol `anon` cuenta únicamente con permisos de `INSERT`. No hay permisos de lectura pública ni edición para proteger la privacidad de los contactos.
+- **Tabla DB:** `community_submissions` (`place_name`, `department`, `comment`, `photo_path`, `contact_optional`, `status = 'pending'`).
+- **Seguridad RLS:** Rol `anon` cuenta únicamente con permisos limitados de `INSERT`. No hay permisos de lectura pública ni edición para proteger la privacidad de los contactos.
 - **UI:** Formulario modal accesible desde el Home y el menú lateral.
-- **Flujo:** Al enviar, muestra confirmación de agradecimiento inmediata sin refrescar la página. Turismo revisa los aportes desde el Dashboard de Supabase.
+- **Flujo:** Al enviar, muestra confirmación de agradecimiento inmediata sin refrescar la página. La foto se carga al bucket privado `community-submission-photos` y Turismo revisa los aportes desde el Dashboard o el CMS.

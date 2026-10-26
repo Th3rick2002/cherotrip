@@ -8,7 +8,9 @@ import {
 } from "lucide-react"
 import type { Listing } from "@/lib/types/listing"
 import { formatEventWhen, formatPriceFrom } from "@/lib/format"
-import { WhatsAppCta } from "@/components/listings/whatsapp-cta"
+import { AccommodationBanner } from "@/components/listings/accommodation-banner"
+import { DetailCta } from "@/components/listings/detail-cta"
+import { SocialLinks } from "@/components/listings/social-links"
 import { ShareButton } from "@/components/listings/share-button"
 import { BackButton } from "@/components/listings/back-button"
 import { CoverImage } from "@/components/listings/cover-image"
@@ -93,6 +95,15 @@ export function ListingDetail({ listing }: { listing: Listing }) {
           </div>
         </header>
 
+        <section className="space-y-2">
+          <h2 className="text-lg font-semibold text-foreground">Descripción</h2>
+          <p className="text-base leading-relaxed text-muted-foreground whitespace-pre-line">
+            {listing.description}
+          </p>
+        </section>
+
+        <SocialLinks listing={listing} />
+
         <section className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <InfoTile
             icon={CalendarClock}
@@ -120,12 +131,7 @@ export function ListingDetail({ listing }: { listing: Listing }) {
           />
         </section>
 
-        <section className="space-y-2">
-          <h2 className="text-lg font-semibold text-foreground">Descripción</h2>
-          <p className="text-base leading-relaxed text-muted-foreground whitespace-pre-line">
-            {listing.description}
-          </p>
-        </section>
+        <AccommodationBanner listing={listing} />
 
         {listing.restrictions ? (
           <div className="rounded-2xl border border-sand-strong/30 bg-sand-strong/10 px-4 py-3 text-sm text-foreground">
@@ -136,7 +142,7 @@ export function ListingDetail({ listing }: { listing: Listing }) {
 
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card/95 p-4 backdrop-blur sm:static sm:mt-2 sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
         <div className="mx-auto max-w-5xl sm:px-6">
-          <WhatsAppCta listing={listing} />
+          <DetailCta listing={listing} />
         </div>
       </div>
     </article>
