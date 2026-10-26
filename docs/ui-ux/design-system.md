@@ -45,3 +45,10 @@ Inspirada en la costa y volcanes de El Salvador:
 ### D. Badges y Estados
 - `Verificado`: Píldora verde/azul con icono de check (`VerifiedIcon`).
 - `Favorito`: Icono de corazón (`LucideHeart`) con microinteracción de relleno rojo/rosa (`fill-rose-500 text-rose-500`).
+
+## 4. Pautas para el Panel Administrativo (Desktop-First & Data-Dense)
+
+- **Sidebar Admin:** Fondo neutro oscuro (`bg-slate-900 text-slate-100`) con acentos de selección sutiles (`bg-slate-800 text-white`).
+- **Data-Tables:** Componentes `Table` de shadcn/ui con filas compactas (`py-2.5`), cabeceras fijas ordenables y badges de estado (`Publicado`, `Borrador`, `Pendiente`, `Rechazado`).
+- **Formularios de Captura:** Distribución a dos o tres columnas en pantallas anchas para evitar scrolling innecesario.
+- **Feedback Operativo:** Toasts mediante `sonner` ubicados en `top-right` o `bottom-right` para confirmación inmediata de mutaciones.

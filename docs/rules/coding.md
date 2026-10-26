@@ -42,3 +42,10 @@ Guía de desarrollo para el stack técnico de Cherotrip.
 - **Enlaces externos:** Todo enlace saliente debe incluir `target="_blank"` y `rel="noopener noreferrer"`.
 - **LCP Optimization:** Las imágenes prioritarias del Hero (`CoverImage`) deben marcarse con `priority`.
 - **PWA Caching:** La configuración de Service Worker (`app/sw.ts`) cachea activos estáticos y páginas offline (`app/~offline`).
+
+## 6. Panel Administrativo (`/admin/*`) y Mutaciones
+
+- **Middleware:** Toda ruta bajo `/admin/*` (excepto `/admin/login`) debe ser evaluada por el middleware de autenticación con `@supabase/ssr`.
+- **Server Actions con Zod:** Las operaciones de creación, edición y eliminación deben implementarse como Server Actions (`'use server'`) con esquemas de validación Zod estrictos.
+- **Supabase Storage:** Las cargas de imágenes de portada se gestionan exclusivamente contra el bucket `listing-covers`, generando URLs públicas seguras.
+- **Manejo de Revalidación:** Tras mutar un listing o categoría, invocar `revalidatePath('/explorar')`, `revalidatePath('/(detail)/...')` o `revalidateTag` según corresponda para actualizar el cache estático.

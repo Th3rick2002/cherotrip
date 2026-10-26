@@ -14,6 +14,7 @@ Directorio turístico y agenda cultural de El Salvador. Enfocado en conversión 
   - [`directorio-core.md`](./specs/directorio-core.md) · Buscador, directorio y ficha base.
   - [`expansion-logistica.md`](./specs/expansion-logistica.md) · Redes, alojamiento, taquilla y agenda.
   - [`social-light.md`](./specs/social-light.md) · Favoritos offline y aportes ciudadanos.
+  - [`admin-cms.md`](./specs/admin-cms.md) · Panel administrativo privado y moderación.
 - [`decisions/`](./decisions/): Architectural Decision Records (ADRs) vigentes.
 - [`changes/`](./changes/): Bitácora narrativa de versiones y evoluciones.
 - [`state/`](./state/): Estado operativo y paquete de reanudación.
