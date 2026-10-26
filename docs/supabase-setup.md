@@ -36,6 +36,13 @@ en esa tabla puede iniciar sesión en Supabase, pero el panel la rechaza.
 En producción, confirma en Dashboard → Authentication → Sign In / Providers que *Allow new users
 to sign up* esté desactivado. `supabase/config.toml` solo aplica a la base local.
 
+## Portadas (`listing-covers`)
+
+La migración `20261026220000_add_listing_covers_bucket.sql` crea el bucket público
+`listing-covers`. Cualquiera puede ver una portada por su URL, pero solo los admins de
+`public.admin_users` pueden subir, reemplazar, listar o borrar archivos. Se administran desde
+`/admin/portadas`.
+
 ## Seed de prueba
 
 `supabase/seed.sql` agrega cuatro listings identificados como `[QA]` para revisar las funciones v3
