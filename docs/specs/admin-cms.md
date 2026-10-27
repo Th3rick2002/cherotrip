@@ -28,7 +28,10 @@ Rutas privadas agrupadas bajo el layout `/admin`:
 - **Sesión persistente:** Manejo de cookies seguro mediante `@supabase/ssr`. El sitio público no lee cookies de sesión.
 
 ### Módulo B: Gestión de Contenido y Multimedia (Issues #42 y #43)
-- **Bucket Storage:** `listing-covers` en Supabase Storage (lectura pública, escritura solo para administradores autenticados).
+- **Bucket Storage (Issue #42):** `listing-covers` en Supabase Storage. Lectura pública por URL; listar, subir, reemplazar y borrar solo con `public.is_admin()`. JPG, PNG o WebP, máximo 5 MB (lo aplica el bucket). Rutas `<slug|general>/<uuid>.<ext>`, también exigidas por la política.
+  - **Subida:** la Server Action `createCoverUpload` (`lib/admin/cover-actions.ts`) valida con zod y devuelve un token firmado; el navegador sube el archivo directo a Storage con `uploadToSignedUrl`. Así la imagen no pasa por la función de Vercel (límite de ~4.5 MB por petición).
+  - **UI:** `components/admin/cover-picker.tsx` (arrastrar y soltar, vista previa, `name` para usarlo dentro de un `<form>`). `/admin/portadas` lista las imágenes, copia su URL y las borra; los formularios de #43 reutilizarán el selector.
+  - El bucket `covers` original (portadas del seed) se conserva sin cambios.
 - **Formularios React Hook Form + Zod:**
   - Datos generales: título, slug, tipo (`lugar` o `evento`), departamento, categoría, descripción.
   - Logística y costos: precios, horarios, cómo llegar (buses/vehículos), nivel de accesibilidad.
