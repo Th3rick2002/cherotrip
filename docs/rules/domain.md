@@ -10,12 +10,12 @@ Cherotrip es una plataforma móvil y web para descubrir lugares turísticos y ev
 
 ### A. Listings (`listings`)
 Unidad atómica del directorio. Puede ser de dos subtipos:
-1. **Lugar (`tipo = 'lugar'`):**
+1. **Lugar (`type = 'place'`):**
    - Destino permanente (playa, parque arqueológico, cascada, mirador, restaurante icónico).
-   - Horarios habituales semanales (`horarios`).
+   - Horarios habituales (`schedule_text`).
    - Requiere información de transporte público y privado.
-2. **Evento (`tipo = 'evento'`):**
-   - Actividad con rango de fechas (`fecha_inicio`, `fecha_fin`).
+2. **Evento (`type = 'event'`):**
+   - Actividad con rango de fechas (`starts_at`, `ends_at`).
    - Puede ser de un solo día o multi-día (festivales, fiestas patronales).
    - Puede asociar una agenda detallada mediante `sub_events`.
 
@@ -28,6 +28,8 @@ Unidad atómica del directorio. Puede ser de dos subtipos:
 - Campos principales: `place_name`, `department`, `comment`, `photo_path`, `contact_optional`.
 - Estados de moderación: `pending` (default), `approved`, `rejected`.
 - Nunca se publica directamente en el directorio sin revisión editorial.
+
+Los listings de lugar y evento comparten `public.listings` y se separan por `type`. Las categorías editoriales viven en `categories` y se relacionan por `listing_categories`; `category_listing_types` define si cada categoría aplica a lugares, eventos o ambos. La agenda usa su catálogo aparte `activity_categories`.
 
 ## 3. Geografía y Clasificación (El Salvador)
 

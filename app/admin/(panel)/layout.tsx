@@ -17,7 +17,11 @@ export default function AdminPanelLayout({ children }: LayoutProps<"/admin">) {
           </Suspense>
         </div>
       </aside>
-      <main className="min-w-0 flex-1 px-4 py-6 sm:px-8 sm:py-8">{children}</main>
+      <main className="min-w-0 flex-1 px-4 py-6 sm:px-8 sm:py-8">
+        <Suspense fallback={<div className="mx-auto max-w-7xl animate-pulse rounded-2xl bg-card p-8 text-sm text-muted-foreground">Cargando panel…</div>}>
+          {children}
+        </Suspense>
+      </main>
     </div>
   )
 }

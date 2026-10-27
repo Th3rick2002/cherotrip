@@ -1,46 +1,84 @@
-# Especificación Funcional: Panel Administrativo Interno (CMS)
+# Especificación Funcional: Panel Administrativo (CMS)
 
-Módulo privado para la gestión editorial, subida de multimedia y moderación de contenidos de Cherotrip por parte de Turismo y Mercadotecnia.
+> Estado local al 2026-10-26: flujos CMS implementados en código y migración pendiente de aplicar por el propietario en Supabase. El inventario operativo está en [HANDOFF.md](../state/HANDOFF.md).
 
-## 1. Objetivos
+## 1. Objetivo
 
-- Proveer al equipo no técnico una interfaz gráfica web para crear, editar y moderar listings sin tocar SQL ni depender de archivos Excel manuales.
-- Garantizar la integridad de los datos mediante validaciones de esquema estrictas (`zod`).
-- Centralizar la carga de imágenes a través de almacenamiento en la nube (Supabase Storage).
+Permitir que el equipo gestione desde `/admin` el contenido real que se publica en Cherotrip: lugares, eventos y sus agendas, categorías, aportes comunitarios y módulos editoriales de Home. El panel debe guardar en Supabase y controlar explícitamente cuándo un registro es borrador, publicado o retirado.
 
-## 2. Arquitectura de Rutas (`/admin/*`)
+## 2. Estado implementado
 
-Rutas privadas agrupadas bajo el layout `/admin`:
+- **Autenticación (#41):** login email/contraseña, allow-list `public.admin_users`, verificación mediante `public.is_admin()` en `proxy.ts`, páginas y acciones.
+- **Portadas (#42):** bucket público `listing-covers`; solo admins pueden listar, subir y borrar. La UI permite arrastrar/seleccionar JPG, PNG o WebP de hasta 5 MiB, revisar la biblioteca y copiar URLs.
+- **Dashboard:** muestra métricas de lugares, eventos, publicaciones, borradores y aportes pendientes.
+- **Gestión editorial (#43):** CRUD separado de lugares/eventos; formularios escriben en `listings` fijando el tipo. Eventos incluyen agenda, y ambos formularios admiten logística, categorías y portada. Publicar o despublicar es explícito.
+- **Catálogos:** las categorías del directorio se asignan a lugares, eventos o ambos por `category_listing_types`; también se gestionan las categorías de actividad de agenda. Se pueden desactivar sin perder relaciones existentes.
+- **Home:** colecciones y servicios rápidos se administran en `/admin/contenido`; la vista pública las carga de `home_quick_links`.
+- **Moderación (#44):** bandeja de pendientes, fotos privadas por URL firmada y conversión transaccional a borrador de lugar. El aporte pasa a aprobado al completar la conversión o puede rechazarse.
 
-- `/admin/login`: Pantalla de acceso mediante correo y contraseña.
-- `/admin/dashboard`: Métricas resumidas (total listings activos, eventos vigentes, aportes pendientes).
-- `/admin/lugares`: Tabla densa y formulario CRUD de lugares turísticos.
-- `/admin/eventos`: Tabla densa y formulario CRUD de eventos y agenda `sub_events`.
-- `/admin/moderacion`: Bandeja de entrada para revisar y aprobar `community_submissions`.
+## 3. Rutas objetivo
 
-## 3. Módulos y Requerimientos
+- `/admin/dashboard`: conteos de lugares, eventos, borradores, publicaciones y aportes pendientes.
+- `/admin/lugares` y `/admin/lugares/nuevo`, `/admin/lugares/[id]`: tabla y formulario exclusivos para listings `type = 'place'`.
+- `/admin/eventos` y `/admin/eventos/nuevo`, `/admin/eventos/[id]`: tabla y formulario exclusivos para listings `type = 'event'`, incluida la agenda.
+- `/admin/categorias`: administración de categorías del directorio y del catálogo de categorías de agenda. Las categorías del directorio se pueden asignar a lugar, evento o ambos.
+- `/admin/moderacion`: aportes `pending`, vista segura de su foto y acciones de moderación.
+- `/admin/portadas`: biblioteca ya disponible e integrada en ambos formularios.
+- Configuración de Home para administrar las colecciones y servicios rápidos que actualmente están hard-coded.
 
-### Módulo A: Autenticación y Seguridad (Issue #41)
-- **Proveedor:** Supabase Auth (Email y Contraseña).
-- **Sin registro público:** No existe auto-registro; las cuentas son creadas manualmente desde el dashboard de Supabase y asignadas al personal autorizado. `enable_signup = false` en Auth.
-- **Rol admin explícito:** estar autenticado no da acceso. Un usuario es admin solo si su `id` está en `public.admin_users`; se consulta con `public.is_admin()`. Las políticas RLS de #42–#44 deben usar `public.is_admin()`, nunca solo `to authenticated`. Así, activar más adelante el login público para visitantes no les da permisos de admin.
-- **Proxy:** `proxy.ts` (Next.js 16 renombró `middleware.ts`) intercepta `/admin/*` y redirige a `/admin/login` si no hay sesión de admin. Es la primera barrera; cada página y Server Action vuelve a verificar con `requireAdmin()` (`lib/admin/auth.ts`).
-- **Sesión persistente:** Manejo de cookies seguro mediante `@supabase/ssr`. El sitio público no lee cookies de sesión.
+> Se excluye de este alcance convertir textos estructurales de páginas institucionales (Sobre, Contacto, navegación) en contenido editable, salvo nueva decisión.
 
-### Módulo B: Gestión de Contenido y Multimedia (Issues #42 y #43)
-- **Bucket Storage (Issue #42):** `listing-covers` en Supabase Storage. Lectura pública por URL; listar, subir, reemplazar y borrar solo con `public.is_admin()`. JPG, PNG o WebP, máximo 5 MB (lo aplica el bucket). Rutas `<slug|general>/<uuid>.<ext>`, también exigidas por la política.
-  - **Subida:** la Server Action `createCoverUpload` (`lib/admin/cover-actions.ts`) valida con zod y devuelve un token firmado; el navegador sube el archivo directo a Storage con `uploadToSignedUrl`. Así la imagen no pasa por la función de Vercel (límite de ~4.5 MB por petición).
-  - **UI:** `components/admin/cover-picker.tsx` (arrastrar y soltar, vista previa, `name` para usarlo dentro de un `<form>`). `/admin/portadas` lista las imágenes, copia su URL y las borra; los formularios de #43 reutilizarán el selector.
-  - El bucket `covers` original (portadas del seed) se conserva sin cambios.
-- **Formularios React Hook Form + Zod:**
-  - Datos generales: título, slug, tipo (`lugar` o `evento`), departamento, categoría, descripción.
-  - Logística y costos: precios, horarios, cómo llegar (buses/vehículos), nivel de accesibilidad.
-  - Campos v3: redes oficiales (`instagram_url`, `facebook_url`, `tiktok_url`), taquilla (`ticket_url`, `ticket_provider`), hospedaje (`accommodation_url`, `accommodation_search_query`).
-  - Agenda multi-día: creador dinámico de filas para `sub_events`, usando `activity_categories`.
-- **UI Data-Dense:** Tablas de `shadcn/ui` con filtros rápidos, búsqueda en tiempo real y paginación.
-- **Feedback:** Notificaciones tipo Toast (`Sonner`) ante acciones de guardado o error.
+## 4. Modelo de edición
 
-### Módulo C: Moderación Comunitaria (Issue #44)
-- **Bandeja de Aportes:** Lista de registros de `community_submissions` en estado `pending`.
-- **Acción "Aprobar":** Abre el formulario de listing prellenado con la información sugerida por el usuario y actualiza el estado a `aprobado`.
-- **Acción "Rechazar":** Cambia el estado a `rechazado` o elimina la fila si es contenido basura/spam.
+Lugares y eventos comparten `public.listings`, diferenciados por `type`, pero el panel debe tener vistas, rutas y formularios distintos. Cada action fija su propio tipo y nunca confía en un `type` libre enviado por el navegador. Los campos compartidos se reutilizan como secciones/componentes, mientras que los campos específicos se muestran según el tipo.
+
+### Campos comunes de `listings`
+
+- Identidad: `title`, `slug`, `description`, `department`, `meeting_point`, categorías de directorio y `cover_image_url`.
+- Publicación: `is_published`, `published_at`, `featured`, `verified`.
+- Información al visitante: `price_from`, `payment_methods`, `transport_info`, `accessibility_notes`, `extras`, `restrictions`, `tags`, `whatsapp_phone`.
+- Enlaces opcionales: `instagram_url`, `facebook_url`, `tiktok_url`, `accommodation_url`, `accommodation_search_query`.
+
+### Formulario de lugar (`type = 'place'`)
+
+Incluye datos comunes y `schedule_text` para horarios habituales. Oculta fechas de evento, taquilla y agenda, salvo que se acuerde permitir alguno de esos campos en lugares.
+
+### Formulario de evento (`type = 'event'`)
+
+Incluye datos comunes, `starts_at`, `ends_at`, `ticket_url`, `ticket_provider` y una lista editable de `sub_events`. Cada actividad usa `event_date`, `start_time`, `end_time`, `title`, `description`, `venue`, `activity_category_id` y `sort_order`.
+
+### Catálogos
+
+- `categories` clasifica listings mediante `listing_categories`; `category_listing_types` mantiene los tipos compatibles. La migración inicial asigna cada categoría actual a ambos tipos para conservar el comportamiento anterior.
+- `activity_categories` clasifica cada actividad de agenda.
+- Ambas listas necesitan gestión admin: crear/editar, ordenar, activar/desactivar. No borrar una categoría que esté en uso; las referencias se deben conservar.
+- Un listing solo puede asociarse a categorías cuyo alcance incluya su tipo. Categorías inactivas existentes se conservan en edición, pero no se ofrecen para nuevas asignaciones.
+
+## 5. Reglas editoriales y comunidad
+
+- Los registros nuevos empiezan como borrador (`is_published = false`); publicar es una acción explícita.
+- Un evento puede guardarse sin agenda; solo se muestra la agenda pública si hay actividades.
+- Los aportes comunitarios no se publican directamente. Moderación muestra su foto privada únicamente a admins.
+- «Convertir en lugar/evento» abre el formulario correspondiente prellenado y guarda un borrador. El aporte solo pasa a `approved` cuando el admin termina la conversión; luego puede publicar por separado. Para spam se permite `rejected` o eliminación explícita.
+- No eliminar listings que deban conservar historial o favoritos; ofrecer retirar/despublicar (`is_published = false`).
+- No borrar portadas referenciadas por listings. La limpieza de objetos huérfanos se mantiene manual hasta definir su proceso.
+
+## 6. Seguridad, persistencia y sincronización
+
+- Toda página y Server Action privada usa `requireAdmin()`/`getAdmin()`; validación Zod en servidor.
+- RLS protege listings, relaciones, sub-eventos, catálogos y aportes. `authenticated` por sí solo no autoriza: las políticas admin usan `public.is_admin()`.
+- Dar a los admins lectura de todos los listings (incluidos borradores) y permisos de escritura necesarios; público conserva lectura de listings publicados y categorías activas.
+- Aportes: admins pueden leer, actualizar estado y rechazar/eliminar; anónimos conservan solo `INSERT` de aportes pendientes.
+- El bucket `community-submission-photos` permanece privado. Admins obtienen acceso temporal/controlado a la foto; nunca URL pública.
+- Tras mutaciones se revalidan rutas o tags utilizados por Home, Explorar, listados y detalle para que la publicación se refleje inmediatamente.
+- Migraciones incrementales, nombres de tablas/columnas en inglés y preservación de los registros QA existentes. No limpiar datos de Supabase como parte de las migraciones.
+
+## 7. Interfaz
+
+Desktop-first con tablas compactas, búsqueda/filtros, paginación, estados visibles (`Borrador`, `Publicado`, `Pendiente`, `Aprobado`, `Rechazado`) y formularios agrupados por secciones. Formularios responsivos y carga de portada reutilizando `CoverPicker`. Confirmación antes de acciones destructivas y mensajes de éxito/error.
+
+## 8. Trabajo pendiente
+
+- **#43 y #44:** implementación local completa; revisar issues remotas y cerrar solo después de QA aceptada.
+- Aplicar `20261027045830_admin_cms_content.sql` al proyecto MVP enlazado; no se ejecutó desde este entorno.
+- QA manual: alta/edición por tipo, agenda, publicación/despublicación, catálogos, contenido Home y moderación con foto privada; comprobar aparición pública y preservación de fixtures existentes.

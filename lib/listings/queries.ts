@@ -1,4 +1,4 @@
-import { cacheLife } from "next/cache"
+import { cacheLife, cacheTag } from "next/cache"
 import { createPublicClient } from "@/lib/supabase/public"
 import {
   DEPARTMENTS,
@@ -54,6 +54,7 @@ const listingDetailSelect = `
 export async function getCategories(): Promise<Category[]> {
   "use cache"
   cacheLife("hours")
+  cacheTag("public-categories")
 
   const supabase = createPublicClient()
   const { data, error } = await supabase
@@ -72,6 +73,7 @@ export async function getCategories(): Promise<Category[]> {
 export async function getUpcomingEvents(limit = 6): Promise<Listing[]> {
   "use cache"
   cacheLife("minutes")
+  cacheTag("public-listings")
 
   const supabase = createPublicClient()
   const { data, error } = await supabase
@@ -93,6 +95,7 @@ export async function getUpcomingEvents(limit = 6): Promise<Listing[]> {
 export async function getFeaturedPlaces(limit = 6): Promise<Listing[]> {
   "use cache"
   cacheLife("minutes")
+  cacheTag("public-listings")
 
   const supabase = createPublicClient()
   const { data, error } = await supabase
@@ -125,6 +128,7 @@ export async function searchListings(
 ): Promise<{ items: Listing[]; total: number }> {
   "use cache"
   cacheLife("minutes")
+  cacheTag("public-listings")
 
   const { q, category, department, tag, type, limit = 24 } = params
   const supabase = createPublicClient()
@@ -188,6 +192,7 @@ export async function getPlacesByDepartment(
 ): Promise<Listing[]> {
   "use cache"
   cacheLife("minutes")
+  cacheTag("public-listings")
 
   const supabase = createPublicClient()
   const { data, error } = await supabase
@@ -212,6 +217,7 @@ export async function getPlacesGroupedByDepartment(
 ): Promise<Record<string, Listing[]>> {
   "use cache"
   cacheLife("minutes")
+  cacheTag("public-listings")
 
   const supabase = createPublicClient()
   const { data, error } = await supabase
@@ -246,6 +252,7 @@ export async function getListingBySlug(
 ): Promise<Listing | null> {
   "use cache"
   cacheLife("minutes")
+  cacheTag("public-listings")
 
   const supabase = createPublicClient()
   const { data, error } = await supabase
@@ -266,6 +273,7 @@ export async function getListingBySlug(
 export async function getSubEvents(listingId: number): Promise<SubEvent[]> {
   "use cache"
   cacheLife("minutes")
+  cacheTag("public-listings")
 
   const supabase = createPublicClient()
   const { data, error } = await supabase

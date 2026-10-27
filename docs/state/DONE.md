@@ -23,7 +23,7 @@ Registro de hitos y tareas finalizadas recientemente en el proyecto.
   - Rutas dinámicas por slug (`/lugar/[slug]` y `/evento/[slug]`).
   - Hero inmersivo con botones de compartir nativo (`ShareButton`) y regreso inteligente (`BackButton`).
   - Cuadrícula de información logística 2×2: horarios, costo, transporte y accesibilidad.
-  - Botón flotante inferior (sticky CTA) con enlace directo a WhatsApp (`wa.me`) con mensaje personalizado.
+  - Contacto social junto a redes; compra de entradas en tarjeta al final de la ficha del evento, sin barra fija.
 - [x] **Navegación Global:**
   - Barra superior (`TopBar`) con logo y acceso rápido.
   - Menú lateral deslizante (`SideDrawer`) con enlaces a secciones informativas.
@@ -38,9 +38,22 @@ Registro de hitos y tareas finalizadas recientemente en el proyecto.
 - [x] **[#31](https://github.com/Th3rick2002/cherotrip/issues/31) Migración DB v3:** Ampliadas columnas en `listings` (redes, taquilla, alojamiento), creadas tablas `activity_categories`, `sub_events` y `community_submissions` con índices y políticas RLS; creado bucket privado `community-submission-photos`.
 - [x] **[#33](https://github.com/Th3rick2002/cherotrip/issues/33) SocialLinks:** Enlaces oficiales seguros de Instagram, Facebook y TikTok en la ficha.
 - [x] **[#34](https://github.com/Th3rick2002/cherotrip/issues/34) AccommodationBanner:** Banner de alojamiento con prioridad a URL directa y búsqueda Airbnb de respaldo.
-- [x] **[#35](https://github.com/Th3rick2002/cherotrip/issues/35) DetailCta:** CTA sticky de taquilla que reemplaza WhatsApp cuando la URL es válida.
+- [x] **[#35](https://github.com/Th3rick2002/cherotrip/issues/35) DetailCta:** compra de entradas en tarjeta al final de la ficha del evento; WhatsApp junto a las redes sociales.
+- [x] **[#36](https://github.com/Th3rick2002/cherotrip/issues/36) Agenda multi-día:** agenda con pestañas por día y actividades ordenadas; fusionada en PR #46.
+- [x] **[#37–#38](https://github.com/Th3rick2002/cherotrip/issues/37) Favoritos y Mis Guardados:** favoritos locales y página `/guardados`; fusionados en PR #46.
+- [x] **[#39](https://github.com/Th3rick2002/cherotrip/issues/39) Aportes comunitarios:** formulario independiente `/aportar` con foto privada; fusionado en PR #46.
+- [x] **[#40](https://github.com/Th3rick2002/cherotrip/issues/40) QA v3:** validación de flujos registrada y issue cerrada según el último handoff. La QA de CMS se hará tras implementar #43–#44.
 - [x] **Fixtures QA v3:** Tres listings publicados en el proyecto Supabase del MVP para comprobar las variantes de detalle.
 - [x] **Cancelación y Reemplazo de [#32](https://github.com/Th3rick2002/cherotrip/issues/32):** Descartado flujo manual de Excel en favor del Panel Administrativo CMS.
 - [x] **Especificación e Issues del Panel Admin (CMS):** Creadas en GitHub las issues #41 (Auth), #42 (Storage), #43 (CRUDs) y #44 (Moderación).
 - [x] **Reestructuración Integral de `/docs/`:** Normalización con `rules/`, `ui-ux/`, `specs/`, `decisions/`, `changes/` y `state/`.
 - [x] **Saneamiento de Entorno:** Remoción del hook huérfano de Coucou en la configuración CLI.
+
+### Panel Administrativo (estado parcial)
+
+- [x] **[#41] Acceso admin:** Auth por correo/contraseña, allow-list `admin_users` y protección con `is_admin()`. Migración aplicada en Supabase MVP; el propietario confirmó que inicia sesión.
+- [x] **[#42] Portadas:** bucket `listing-covers`, políticas admin y biblioteca de subida/gestión implementados y migración aplicada.
+- [x] **[#43] Gestión editorial local:** CRUD separado para lugares/eventos, categorías con alcance por tipo, agenda, publicación explícita, selección de portadas y módulos Home administrables. Migración remota y QA pendientes.
+- [x] **[#44] Moderación local:** bandeja, foto privada con URL firmada, conversión transaccional a borrador y rechazo. Migración remota y QA pendientes.
+
+El código ya permite preparar publicaciones reales, pero los cambios dependen de aplicar la nueva migración al proyecto Supabase MVP y completar QA manual. Ver [especificación del CMS](../specs/admin-cms.md) y [HANDOFF](HANDOFF.md).
