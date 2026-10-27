@@ -1,3 +1,5 @@
+import { getSiteUrl } from "@/lib/site"
+
 type BuildWhatsAppUrlInput = {
   phone: string
   title: string
@@ -16,7 +18,7 @@ export function buildWhatsAppUrl({
   title,
   type,
   slug,
-  origin = "https://cherotrip.com",
+  origin = getSiteUrl(),
 }: BuildWhatsAppUrlInput): string {
   const path = type === "event" ? "evento" : "lugar"
   const url = `${origin.replace(/\/$/, "")}/${path}/${slug}`
