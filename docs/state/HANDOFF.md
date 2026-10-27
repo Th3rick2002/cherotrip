@@ -54,3 +54,9 @@ No se aplicaron migraciones remotas, no se tocaron datos existentes y no se ejec
 - El usuario intentó `pnpm db:push` y `pnpm exec supabase db push --linked`; ambos fallaron en la conexión con el pooler de Supabase antes de aplicar SQL (`Initialising login role` / `Connection terminated unexpectedly`). Por tanto, la migración CMS sigue pendiente y no se debe asumir aplicada.
 - La documentación oficial de Supabase describe fallos del login sin contraseña con el rol interno `cli_login_postgres` en Supavisor y recomienda usar `SUPABASE_DB_PASSWORD`; también recomienda revisar IPs bloqueadas en Database Settings tras reintentos fallidos.
 - Al 2026-10-27 la página de estado de Supabase reporta servicios operativos. Próximo intento recomendado: usar temporalmente la contraseña de PostgreSQL (distinta de `SUPABASE_ACCESS_TOKEN`) para un `--dry-run`, verificar que enumere solo `20261027045830_admin_cms_content.sql`, y luego hacer el push. No repetir intentos passwordless si vuelve a fallar; revisar antes los bloqueos de red/IP.
+
+## Incidencia de portada pública
+
+- QA reportó que una portada subida desde el CMS no aparecía y el navegador pedía `/covers/{slug}.jpg`, ruta local inexistente para ese listing.
+- `CoverImage` recibía la URL guardada en `cover_image_url`, pero `resolveCoverSrc` priorizaba siempre el fallback local si también había `slug`. Se corrigió para usar primero la URL configurada y recurrir a `/covers/{slug}.jpg` únicamente cuando no hay URL guardada.
+- Falta que el propietario vuelva a cargar el detalle del lugar probado y confirme visualmente que la portada de Storage aparece.
