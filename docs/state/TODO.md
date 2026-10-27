@@ -2,6 +2,8 @@
 
 Backlog activo ordenado por bloques de ejecución recomendados.
 
+> Estado del código y de Supabase conocido localmente; el estado remoto de GitHub no se pudo consultar en la última revisión. No usar este archivo como confirmación del estado remoto de las issues.
+
 ---
 
 ## Bloque 0 — Cierre de Soft Launch Operativo (En paralelo)
@@ -29,36 +31,27 @@ Backlog activo ordenado por bloques de ejecución recomendados.
   - Enlace contextual de hospedaje bajo sección de transporte.
 - [x] **[#35](https://github.com/Th3rick2002/cherotrip/issues/35)** `[v3][UI] DetailCta — CTA dinámico WhatsApp vs Taquilla` (`P0`)
   - Extender `WhatsAppCta` para priorizar compra de entradas en eventos con ticketera.
-- [ ] **[#36](https://github.com/Th3rick2002/cherotrip/issues/36)** `[v3][UI] EventAgenda — agenda multi-día con tabs y timeline para sub_eventos` (`P0`)
-  - Selector de días y lista cronológica de actividades por sede.
+- [x] **[#36](https://github.com/Th3rick2002/cherotrip/issues/36)** Agenda multi-día implementada y fusionada en PR #46; sigue abierta para revisión colaborativa según el último handoff.
 
 ---
 
 ## Bloque 3 — Fase 2 Social Light (Público)
 
-- [ ] **[#37](https://github.com/Th3rick2002/cherotrip/issues/37)** `[v3][Feature] Favoritos (corazón en cards) con hook useFavorites y localStorage` (`P0`)
-  - Toggle de guardado sin requerir sesión de usuario.
-- [ ] **[#38](https://github.com/Th3rick2002/cherotrip/issues/38)** `[v3][UI] Mis Guardados — ruta y navegación (móvil y header)` (`P0`)
-  - Vista `/guardados` y enlaces en TopBar / SideDrawer.
-- [ ] **[#39](https://github.com/Th3rick2002/cherotrip/issues/39)** `[v3][Feature] Modal 'Aporta a la Comunidad' + envío a aportes_comunidad` (`P1`)
-  - Formulario modal ciudadano con inserción directa a cola de moderación.
+- [x] **[#37](https://github.com/Th3rick2002/cherotrip/issues/37)** Favoritos locales implementados y fusionados en PR #46; sigue abierta para revisión colaborativa según el último handoff.
+- [x] **[#38](https://github.com/Th3rick2002/cherotrip/issues/38)** `/guardados` y navegación implementados y fusionados en PR #46; sigue abierta para revisión colaborativa según el último handoff.
+- [x] **[#39](https://github.com/Th3rick2002/cherotrip/issues/39)** `/aportar` implementado y fusionado en PR #46; sigue abierta para revisión colaborativa según el último handoff.
 
 ---
 
 ## Bloque 4 — Panel Administrativo Interno CMS (Desktop-First)
 
-- [ ] **[#41](https://github.com/Th3rick2002/cherotrip/issues/41)** `[CMS][Auth] Shell base /admin, Supabase Auth y Middleware de protección` (`P0`)
-  - Login `/admin/login`, Middleware de redirección y Sidebar de navegación interna.
-- [ ] **[#42](https://github.com/Th3rick2002/cherotrip/issues/42)** `[CMS][Storage] Bucket de Supabase Storage para portadas y carga multimedia` (`P1`)
-  - Bucket `listing-covers`, políticas RLS de admin y componente selector de fotos.
-- [ ] **[#43](https://github.com/Th3rick2002/cherotrip/issues/43)** `[CMS][CRUD] Gestión de Lugares y Eventos (Data-tables y Formularios)` (`P0`)
-  - Data-tables de shadcn/ui y formularios con React Hook Form + Zod (lugares, eventos, agenda).
-- [ ] **[#44](https://github.com/Th3rick2002/cherotrip/issues/44)** `[CMS][Moderación] Bandeja de revisión de aportes_comunidad` (`P1`)
-  - Vista `/admin/moderacion` para revisar, aprobar o descartar aportes comunitarios.
+- [x] **[#41](https://github.com/Th3rick2002/cherotrip/issues/41)** Acceso admin implementado; migración aplicada y acceso del propietario confirmado.
+- [x] **[#42](https://github.com/Th3rick2002/cherotrip/issues/42)** Biblioteca y carga de portadas implementadas; migración aplicada.
+- [x] **[#43](https://github.com/Th3rick2002/cherotrip/issues/43)** Implementación local: formularios CRUD separados por tipo, agenda, catálogos por tipo, portadas y contenido de Home. Pendiente migración remota y QA.
+- [x] **[#44](https://github.com/Th3rick2002/cherotrip/issues/44)** Implementación local: bandeja, fotos privadas firmadas, conversión transaccional a borrador y rechazo. Pendiente migración remota y QA.
 
 ---
 
 ## Bloque 5 — QA y Verificación Integral
 
-- [ ] **[#40](https://github.com/Th3rick2002/cherotrip/issues/40)** `[v3][QA] QA de la expansión v3 (smoke test ampliado, CMS y exclusiones)` (`P1`)
-  - Validar los flujos de favoritos, taquilla, agenda, aportes y CMS en producción.
+- [x] **[#40](https://github.com/Th3rick2002/cherotrip/issues/40)** QA v3 validada y issue cerrada según el último handoff. Repetir QA para CMS tras aplicar su migración.

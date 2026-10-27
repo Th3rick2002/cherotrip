@@ -64,6 +64,18 @@ export type SubEvent = {
   activity_category?: ActivityCategory
 }
 
+export type HomeQuickLink = {
+  id: number
+  slug: string
+  section: "collection" | "service"
+  label: string
+  icon_key: string
+  target_kind: "search" | "tag" | "category"
+  target_value: string
+  sort_order: number
+  is_active: boolean
+}
+
 export type CommunitySubmission = {
   id: number
   place_name: string
@@ -76,9 +88,19 @@ export type CommunitySubmission = {
 }
 
 export const DEPARTMENTS = [
+  "Ahuachapán",
+  "Santa Ana",
+  "Sonsonate",
+  "La Libertad",
+  "Chalatenango",
+  "Cuscatlán",
+  "San Salvador",
+  "La Paz",
+  "Cabañas",
+  "San Vicente",
+  "Usulután",
   "San Miguel",
   "Morazán",
-  "Usulután",
   "La Unión",
 ] as const
 

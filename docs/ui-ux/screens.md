@@ -56,12 +56,22 @@ Flujo y comportamiento visual de las pantallas de Cherotrip.
 
 ## 6. Panel Administrativo Interno (`/admin/*`) — Desktop-First
 
+### Estado actual
+
+- `/admin/login` y el shell con navegación están implementados y el propietario confirmó acceso.
+- `/admin/dashboard` muestra métricas de lugares, eventos, publicaciones, borradores y aportes pendientes.
+- `/admin/portadas` permite subir/listar/copiar/borrar imágenes de `listing-covers`.
+- Lugares, eventos, categorías, Home y moderación ya tienen rutas de gestión. Los formularios están conectados a la base de datos mediante la nueva migración CMS.
+
 - **Enfoque:** Diseñado para pantallas de escritorio (computadoras de oficina), priorizando densidad de información, rapidez de captura y claridad tabular.
-- **Rutas clave:**
+- **Rutas objetivo:**
   - `/admin/login`: Formulario centrado y minimalista para ingreso por correo y contraseña.
-  - `/admin/dashboard`: Vista general con tarjetas de resumen métrico y accesos rápidos.
-  - `/admin/lugares` & `/admin/eventos`: Data-tables con paginación, filtros multicriterio, acciones rápidas (editar, eliminar, alternar publicado) y modales o pantallas completas de edición con `react-hook-form` + `zod`.
-  - `/admin/moderacion`: Bandeja de correo estilo split-view o tabla de aportes ciudadanos con botones de acción directa ("Aprobar como listing" o "Descartar").
+  - `/admin/dashboard`: Resumen con métricas de listings publicados/borradores y aportes pendientes.
+  - `/admin/lugares` y `/admin/eventos`: secciones y formularios separados que escriben en `listings` fijando `type = 'place'` o `type = 'event'`. Comparten campos comunes; cada formulario presenta campos específicos y la agenda corresponde solo a eventos.
+  - `/admin/categorias`: gestión de categorías de directorio por tipo de listing y categorías de actividad.
+  - `/admin/moderacion`: aportes ciudadanos con visualización privada de foto y flujo para convertir una sugerencia en borrador editable.
+  - `/admin/portadas`: biblioteca integrada en formularios para asignar la URL de la imagen al listing.
+  - Configuración editorial de Home para colecciones y servicios rápidos.
 - **Layout:**
   - Sidebar izquierdo oscuro/neutro (`w-64`) fijo con logo, menú de secciones y perfil/logout.
   - Área de contenido central amplia (`bg-slate-50` o `bg-white`) con barra superior de acciones contextuales.

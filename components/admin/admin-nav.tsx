@@ -2,13 +2,15 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, MapPin, CalendarDays, Inbox, ImageIcon } from "lucide-react"
+import { LayoutDashboard, MapPin, CalendarDays, Inbox, ImageIcon, Tags, PanelsTopLeft } from "lucide-react"
 
 const ADMIN_NAV = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard, ready: true },
-  { href: "/admin/lugares", label: "Lugares", icon: MapPin, ready: false },
-  { href: "/admin/eventos", label: "Eventos", icon: CalendarDays, ready: false },
-  { href: "/admin/moderacion", label: "Moderación", icon: Inbox, ready: false },
+  { href: "/admin/lugares", label: "Lugares", icon: MapPin, ready: true },
+  { href: "/admin/eventos", label: "Eventos", icon: CalendarDays, ready: true },
+  { href: "/admin/categorias", label: "Categorías", icon: Tags, ready: true },
+  { href: "/admin/contenido", label: "Home", icon: PanelsTopLeft, ready: true },
+  { href: "/admin/moderacion", label: "Moderación", icon: Inbox, ready: true },
   { href: "/admin/portadas", label: "Portadas", icon: ImageIcon, ready: true },
 ] as const
 
