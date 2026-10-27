@@ -9,7 +9,7 @@ Listado de especificaciones funcionales por módulo y fase de Cherotrip.
 | **Directorio Core** | ✅ Implementado (Prod) | Fase 1 | [`directorio-core.md`](./directorio-core.md) |
 | **Expansión Logística** | 🟡 En Desarrollo (Issue #36) | Bloque 2 (v3) | [`expansion-logistica.md`](./expansion-logistica.md) |
 | **Social Light** | 🟡 Planificado (Issues #37–#39) | Bloque 3 (v3) | [`social-light.md`](./social-light.md) |
-| **Panel Administrativo (CMS)** | 🟡 Planificado (Issues #41–#44) | Bloque 4 (v3) | [`admin-cms.md`](./admin-cms.md) |
+| **Panel Administrativo (CMS)** | 🟡 En desarrollo (#41 en PR; #42–#44 planificados) | Bloque 4 (v3) | [`admin-cms.md`](./admin-cms.md) |
 
 ## Criterios de Aceptación Globales
 

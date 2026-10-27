@@ -22,9 +22,10 @@ Rutas privadas agrupadas bajo el layout `/admin`:
 
 ### Módulo A: Autenticación y Seguridad (Issue #41)
 - **Proveedor:** Supabase Auth (Email y Contraseña).
-- **Sin registro público:** No existe auto-registro; las cuentas son creadas manualmente desde el dashboard de Supabase y asignadas al personal autorizado.
-- **Middleware:** `middleware.ts` intercepta toda ruta `/admin/*` y redirige a `/admin/login` si la sesión no es válida.
-- **Sesión persistente:** Manejo de cookies seguro mediante `@supabase/ssr`.
+- **Sin registro público:** No existe auto-registro; las cuentas son creadas manualmente desde el dashboard de Supabase y asignadas al personal autorizado. `enable_signup = false` en Auth.
+- **Rol admin explícito:** estar autenticado no da acceso. Un usuario es admin solo si su `id` está en `public.admin_users`; se consulta con `public.is_admin()`. Las políticas RLS de #42–#44 deben usar `public.is_admin()`, nunca solo `to authenticated`. Así, activar más adelante el login público para visitantes no les da permisos de admin.
+- **Proxy:** `proxy.ts` (Next.js 16 renombró `middleware.ts`) intercepta `/admin/*` y redirige a `/admin/login` si no hay sesión de admin. Es la primera barrera; cada página y Server Action vuelve a verificar con `requireAdmin()` (`lib/admin/auth.ts`).
+- **Sesión persistente:** Manejo de cookies seguro mediante `@supabase/ssr`. El sitio público no lee cookies de sesión.
 
 ### Módulo B: Gestión de Contenido y Multimedia (Issues #42 y #43)
 - **Bucket Storage:** `listing-covers` en Supabase Storage (lectura pública, escritura solo para administradores autenticados).
