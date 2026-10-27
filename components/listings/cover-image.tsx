@@ -11,8 +11,8 @@ type CoverImageProps = {
 }
 
 /**
- * Prefiere covers locales en `/public/covers/{slug}.jpg`
- * (optimizadas por next/image → WebP/AVIF).
+ * Usa la portada guardada en el listing. Si no existe, conserva el fallback
+ * local en `/public/covers/{slug}.jpg` (optimizado por next/image).
  */
 export function CoverImage({
   src,
@@ -56,8 +56,7 @@ export function resolveCoverSrc(
   src?: string | null,
   slug?: string
 ): string | null {
+  if (src) return src
   if (slug) return `/covers/${slug}.jpg`
-  if (!src) return null
-  if (src.startsWith("/")) return src
-  return src
+  return null
 }
