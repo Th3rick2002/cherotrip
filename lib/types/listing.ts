@@ -88,20 +88,10 @@ export type CommunitySubmission = {
 }
 
 export const DEPARTMENTS = [
-  "Ahuachapán",
-  "Santa Ana",
-  "Sonsonate",
-  "La Libertad",
-  "Chalatenango",
-  "Cuscatlán",
-  "San Salvador",
-  "La Paz",
-  "Cabañas",
-  "San Vicente",
-  "Usulután",
   "San Miguel",
-  "Morazán",
+  "Usulután",
   "La Unión",
+  "Morazán",
 ] as const
 
 export type Department = (typeof DEPARTMENTS)[number]

@@ -9,7 +9,7 @@ Documentación del núcleo de descubrimiento, filtrado y detalle de Cherotrip.
 - Redirige desde el Home a la pantalla de Explorar conservando el parámetro de búsqueda (`?q=...`).
 
 ### B. Directorio y Filtros Ortogonales
-- **Filtro por Departamento:** 14 departamentos de El Salvador.
+- **Filtro por Departamento:** San Miguel, Usulután, La Unión y Morazán.
 - **Filtro por Categoría:** Chips dinámicos cargados desde la tabla `categories`.
 - Posibilidad de filtrar simultáneamente por ambos criterios o de manera aislada.
 

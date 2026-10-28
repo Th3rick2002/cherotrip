@@ -33,11 +33,8 @@ Los listings de lugar y evento comparten `public.listings` y se separan por `typ
 
 ## 3. Geografía y Clasificación (El Salvador)
 
-- **14 Departamentos:**
-  - **Zona Occidental:** Ahuachapán, Santa Ana, Sonsonate.
-  - **Zona Central:** La Libertad, Chalatenango, Cuscatlán, San Salvador.
-  - **Zona Paracentral:** La Paz, Cabañas, San Vicente.
-  - **Zona Oriental:** Usulután, San Miguel, Morazán, La Unión.
+- **Departamentos habilitados para este MVP:** San Miguel, Usulután, La Unión y Morazán.
+- La aplicación y la base de datos deben aceptar únicamente estos cuatro departamentos hasta que se amplíe formalmente la cobertura.
 - **Categorías transversales:**
   - Playas / Surf, Montaña / Volcanes, Pueblos Vivos, Gastronomía, Cultura / Historia, Vida Nocturna.
 - **Regla de filtrado:** Categoría y Departamento son ejes ortogonales e independientes.
