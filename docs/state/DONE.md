@@ -49,11 +49,14 @@ Registro de hitos y tareas finalizadas recientemente en el proyecto.
 - [x] **Reestructuración Integral de `/docs/`:** Normalización con `rules/`, `ui-ux/`, `specs/`, `decisions/`, `changes/` y `state/`.
 - [x] **Saneamiento de Entorno:** Remoción del hook huérfano de Coucou en la configuración CLI.
 
-### Panel Administrativo (estado parcial)
+### Panel Administrativo (CMS) y Expansión Finalizados
 
-- [x] **[#41] Acceso admin:** Auth por correo/contraseña, allow-list `admin_users` y protección con `is_admin()`. Migración aplicada en Supabase MVP; el propietario confirmó que inicia sesión.
-- [x] **[#42] Portadas:** bucket `listing-covers`, políticas admin y biblioteca de subida/gestión implementados y migración aplicada.
-- [x] **[#43] Gestión editorial local:** CRUD separado para lugares/eventos, categorías con alcance por tipo, agenda, publicación explícita, selección de portadas y módulos Home administrables. Migración remota y QA pendientes.
-- [x] **[#44] Moderación local:** bandeja, foto privada con URL firmada, conversión transaccional a borrador y rechazo. Migración remota y QA pendientes.
-
-El código ya permite preparar publicaciones reales, pero los cambios dependen de aplicar la nueva migración al proyecto Supabase MVP y completar QA manual. Ver [especificación del CMS](../specs/admin-cms.md) y [HANDOFF](HANDOFF.md).
+- [x] **[#41] Acceso admin:** Auth por correo/contraseña, allow-list `admin_users` y protección con `is_admin()`. Migración aplicada y confirmada en producción.
+- [x] **[#42] Portadas:** bucket `listing-covers`, políticas admin y biblioteca de subida/gestión en Storage implementados y en producción.
+- [x] **[#43] Gestión editorial (CRUDs):** CRUD separado para lugares/eventos, categorías con alcance por tipo, agenda, publicación explícita, selección de portadas y módulos Home administrables. Migración remota aplicada y PRs #52/#53 fusionados en `main`.
+- [x] **[#44] Moderación comunitaria:** bandeja en `/admin/moderacion`, foto privada con URL firmada, conversión transaccional a borrador y rechazo. Migración remota aplicada y PR #52 fusionado en `main`.
+- [x] **[#36] EventAgenda:** agenda multi-día con pestañas por día y actividades ordenadas; validada y cerrada.
+- [x] **[#37–#38] Favoritos y Mis Guardados:** favoritos locales sin cuenta y ruta `/guardados`; validados y cerrados.
+- [x] **[#39] Aportes comunitarios:** formulario `/aportar` con foto privada y RLS; validado y cerrado.
+- [x] **[#47] Fix de WhatsApp URL:** uso estricto del dominio canónico en producción; resuelto en PR #48.
+- [x] **Migración CMS remota:** `20261027045830_admin_cms_content.sql` aplicada al 100% en el proyecto Supabase de producción.
