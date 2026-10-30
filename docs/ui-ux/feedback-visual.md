@@ -14,7 +14,7 @@ Guía de los estados visuales de carga y acción en Cherotrip. Se aplica junto c
 
 ### Cargas
 
-- `/admin/*` muestra placeholders skeleton para la página en navegación/carga y para la sección de cuenta del sidebar.
+- `/admin/*` muestra placeholders skeleton para la página, la navegación y la sección de cuenta del sidebar. La navegación tiene un límite `Suspense` porque `AdminNav` lee la ruta actual con `usePathname()`.
 - Home, Explorar y las fichas públicas ya usan skeletons en sus límites `Suspense`.
 - Los formularios del panel mantienen sus campos visibles. Sus acciones muestran spinner, texto pendiente y botón deshabilitado hasta completar la operación.
 - El estado de carga se aplica a los formularios de lugares/eventos, categorías, contenido rápido de Home, aliados, moderación de aportes y cierre de sesión.

@@ -12,7 +12,9 @@ export default function AdminPanelLayout({ children }: LayoutProps<"/admin">) {
           <p className="text-lg font-bold tracking-tight">Cherotrip</p>
           <p className="text-xs text-slate-400">Panel interno</p>
         </div>
-        <AdminNav />
+        <Suspense fallback={<AdminNavSkeleton />}>
+          <AdminNav />
+        </Suspense>
         <div className="mt-auto border-t border-slate-800 pt-4">
           <Suspense fallback={<div className="space-y-3"><Skeleton className="h-3 w-32 bg-slate-800" /><Skeleton className="h-10 w-full bg-slate-800" /></div>}>
             <AdminAccount />
@@ -25,5 +27,18 @@ export default function AdminPanelLayout({ children }: LayoutProps<"/admin">) {
         </Suspense>
       </main>
     </div>
+  )
+}
+
+function AdminNavSkeleton() {
+  return (
+    <nav aria-label="Cargando navegación del panel" aria-busy="true" className="flex gap-1 overflow-hidden md:flex-col">
+      {Array.from({ length: 8 }, (_, index) => (
+        <Skeleton
+          key={index}
+          className="h-10 w-28 shrink-0 rounded-lg bg-slate-800 md:w-full"
+        />
+      ))}
+    </nav>
   )
 }

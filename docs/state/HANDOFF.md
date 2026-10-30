@@ -104,3 +104,10 @@ Las migraciones remotas se verificaron con `supabase migration list --linked`. L
 - El buscador de Explorar tiene botón explícito «Buscar» y estado «Buscando…»; botones y enlaces reciben cursor y respuesta breve al pulsar, respetando `prefers-reduced-motion`.
 - El comportamiento completo y los criterios de QA están en [`docs/ui-ux/feedback-visual.md`](../ui-ux/feedback-visual.md). Las microtransiciones actuales son de botones/enlaces; la transición entre rutas queda como posible mejora incremental, no es requisito para esta entrega.
 - Pendiente QA visual/manual de estos ajustes; todavía no se han probado en navegador.
+
+## Error de prerender en Vercel (2026-10-30)
+
+- Vercel reportó `CLIENT_HOOK_DYNAMIC` al prerenderizar `/admin/eventos/[id]`, desde `usePathname()` en `AdminNav`.
+- Next.js 16 con `cacheComponents: true` puede requerir un límite `Suspense` alrededor de `usePathname()` cuando la ruta contiene parámetros dinámicos. Se agregó un fallback skeleton alrededor de la navegación admin, siguiendo la [documentación oficial del hook](https://nextjs.org/docs/app/api-reference/functions/use-pathname).
+- Intento local de `pnpm run build` quedó bloqueado por un panic de Turbopack al crear un proceso (`Operation not permitted`); el build con `--webpack` tampoco pasó su prechequeo de tipos, con `Could not parse output from TypeScript's --showConfig`. Ninguno llegó a confirmar el prerender después del ajuste.
+- Pendiente confirmar en Vercel que el build supera el prerender de `/admin/eventos/[id]`.
