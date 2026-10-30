@@ -37,7 +37,7 @@ export function SocialLinks({ listing }: { listing: Listing }) {
   if (links.length === 0) return null
 
   return (
-    <nav aria-label="Redes sociales y contacto" className="flex items-center gap-3">
+    <nav aria-label="Redes sociales" className="flex items-center gap-3">
       {links.map(({ network, label, href }) => (
         <a
           key={network}

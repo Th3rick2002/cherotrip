@@ -25,16 +25,22 @@ Unidad atómica del directorio. Puede ser de dos subtipos:
 
 ### C. Aportes de la Comunidad (`community_submissions`)
 - Formulario ciudadano anónimo para recomendar sitios o reportar datos.
-- Campos principales: `place_name`, `department`, `comment`, `photo_path`, `contact_optional`.
+- Acepta `listing_type = 'place'` o `'event'`, `title`, `department_id`, descripción, detalles logísticos según el tipo, `photo_path` y `contact_optional` privado.
 - Estados de moderación: `pending` (default), `approved`, `rejected`.
 - Nunca se publica directamente en el directorio sin revisión editorial.
+
+### D. Aliados y patrocinios (`partners`, `listing_partners`)
+- Cada negocio puede asociarse a uno o más lugares.
+- `relationship_type = 'editorial'` se muestra como «Aliado local»; `paid_marketing` y `sponsor` se identifican como «Patrocinado».
+- Descuentos, atribución de compras referidas, contratos e ingresos quedan fuera hasta acordar sus reglas.
 
 Los listings de lugar y evento comparten `public.listings` y se separan por `type`. Las categorías editoriales viven en `categories` y se relacionan por `listing_categories`; `category_listing_types` define si cada categoría aplica a lugares, eventos o ambos. La agenda usa su catálogo aparte `activity_categories`.
 
 ## 3. Geografía y Clasificación (El Salvador)
 
-- **Departamentos habilitados para este MVP:** San Miguel, Usulután, La Unión y Morazán.
-- La aplicación y la base de datos deben aceptar únicamente estos cuatro departamentos hasta que se amplíe formalmente la cobertura.
+- **Departamentos activos iniciales del MVP:** San Miguel, Usulután, La Unión y Morazán.
+- Los departamentos se gestionan en `public.departments`; listings y aportes guardan `department_id` como clave foránea. Los formularios y filtros consultan las filas activas del catálogo.
+- Se pueden agregar departamentos insertando filas al catálogo. Para dejar de ofrecer uno sin perder su historial, se marca `is_active = false`.
 - **Categorías transversales:**
   - Playas / Surf, Montaña / Volcanes, Pueblos Vivos, Gastronomía, Cultura / Historia, Vida Nocturna.
 - **Regla de filtrado:** Categoría y Departamento son ejes ortogonales e independientes.

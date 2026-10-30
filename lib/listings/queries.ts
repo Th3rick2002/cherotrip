@@ -1,15 +1,18 @@
 import { cacheLife, cacheTag } from "next/cache"
 import { createPublicClient } from "@/lib/supabase/public"
 import {
-  DEPARTMENTS,
   type ActivityCategory,
   type Category,
+  type Department,
   type Listing,
+  type ListingPartner,
   type SubEvent,
 } from "@/lib/types/listing"
 
 type ListingRow = Listing & {
+  department_info?: { name: string } | { name: string }[] | null
   listing_categories?: { categories: Category | Category[] | null }[] | null
+  listing_partners?: Array<Omit<ListingPartner, "partner"> & { partners: ListingPartner["partner"] | ListingPartner["partner"][] | null }> | null
 }
 
 function mapListing(row: ListingRow): Listing {
@@ -23,17 +26,48 @@ function mapListing(row: ListingRow): Listing {
       })
       .filter(Boolean) ?? []
 
-  const listing = { ...row }
+  const departmentInfo = Array.isArray(row.department_info) ? row.department_info[0] : row.department_info
+  const listing = { ...row, department: departmentInfo?.name ?? "" }
+  delete listing.department_info
   delete listing.listing_categories
-  return { ...listing, categories }
+  const partners = (row.listing_partners ?? []).flatMap((entry) => {
+    const partner = Array.isArray(entry.partners) ? entry.partners[0] : entry.partners
+    return partner ? [{ id: entry.id, relationship_type: entry.relationship_type, display_text: entry.display_text, partner }] : []
+  })
+  delete listing.listing_partners
+  return { ...listing, categories, partners }
 }
 
 const listingColumns = `
-  id, slug, type, title, description, department, meeting_point,
+  id, slug, type, title, description, department_id,
+  department_info:departments!listings_department_id_fkey(name), meeting_point,
   cover_image_url, starts_at, ends_at, schedule_text, price_from,
   payment_methods, transport_info, accessibility_notes, extras,
   restrictions, tags, whatsapp_phone, verified, featured, published_at
 `
+
+export type DepartmentListings = {
+  departments: Department[]
+  listingsByDepartment: Record<string, Listing[]>
+}
+
+export async function getPublicDepartments(): Promise<Department[]> {
+  "use cache"
+  cacheLife("minutes")
+  cacheTag("public-departments")
+
+  const supabase = createPublicClient()
+  const { data, error } = await supabase
+    .from("departments")
+    .select("id, name, slug, is_active, sort_order")
+    .eq("is_active", true)
+    .order("sort_order", { ascending: true })
+  if (error) {
+    console.error("getPublicDepartments", error.message)
+    return []
+  }
+  return (data ?? []) as Department[]
+}
 
 const listingSelect = `
   ${listingColumns},
@@ -48,6 +82,10 @@ const listingDetailSelect = `
   accommodation_url, accommodation_search_query,
   listing_categories (
     categories ( id, slug, name, icon, sort_order )
+  ),
+  listing_partners (
+    id, relationship_type, display_text,
+    partners ( id, name, description, category, logo_url, website_url, whatsapp_phone, instagram_url )
   )
 `
 
@@ -132,6 +170,9 @@ export async function searchListings(
 
   const { q, category, department, tag, type, limit = 24 } = params
   const supabase = createPublicClient()
+  const departments = department ? await getPublicDepartments() : []
+  const selectedDepartment = departments.find((item) => item.slug === department || item.name === department)
+  if (department && !selectedDepartment) return { items: [], total: 0 }
 
   let query = supabase
     .from("listings")
@@ -144,7 +185,7 @@ export async function searchListings(
     query = query.eq("type", type)
   }
   if (department) {
-    query = query.eq("department", department)
+    query = query.eq("department_id", selectedDepartment!.id)
   }
   if (tag?.trim()) {
     query = query.contains("tags", [tag.trim()])
@@ -195,12 +236,15 @@ export async function getPlacesByDepartment(
   cacheTag("public-listings")
 
   const supabase = createPublicClient()
+  const departments = await getPublicDepartments()
+  const selectedDepartment = departments.find((item) => item.slug === department || item.name === department)
+  if (!selectedDepartment) return []
   const { data, error } = await supabase
     .from("listings")
     .select(listingSelect)
     .eq("is_published", true)
     .eq("type", "place")
-    .eq("department", department)
+    .eq("department_id", selectedDepartment.id)
     .order("featured", { ascending: false })
     .order("published_at", { ascending: false })
     .limit(limit)
@@ -212,39 +256,67 @@ export async function getPlacesByDepartment(
   return (data as ListingRow[] | null)?.map(mapListing) ?? []
 }
 
-export async function getPlacesGroupedByDepartment(
+export async function getListingsGroupedByDepartment(
   limitPerDept = 6
-): Promise<Record<string, Listing[]>> {
+): Promise<DepartmentListings> {
   "use cache"
   cacheLife("minutes")
   cacheTag("public-listings")
 
   const supabase = createPublicClient()
-  const { data, error } = await supabase
-    .from("listings")
-    .select(listingSelect)
-    .eq("is_published", true)
-    .eq("type", "place")
-    .in("department", [...DEPARTMENTS])
-    .order("featured", { ascending: false })
-    .order("published_at", { ascending: false })
+  const departments = await getPublicDepartments()
+  const departmentIds = departments.map((department) => department.id)
+  if (departmentIds.length === 0) return { departments, listingsByDepartment: {} }
+  const now = new Date().toISOString()
+  const [placesResult, eventsResult] = await Promise.all([
+    supabase
+      .from("listings")
+      .select(listingSelect)
+      .eq("is_published", true)
+      .eq("type", "place")
+      .in("department_id", departmentIds)
+      .order("featured", { ascending: false })
+      .order("published_at", { ascending: false }),
+    supabase
+      .from("listings")
+      .select(listingSelect)
+      .eq("is_published", true)
+      .eq("type", "event")
+      .in("department_id", departmentIds)
+      .gte("starts_at", now)
+      .order("starts_at", { ascending: true }),
+  ])
 
-  if (error) {
-    console.error("getPlacesGroupedByDepartment", error.message)
-    return Object.fromEntries(DEPARTMENTS.map((d) => [d, []]))
+  if (placesResult.error || eventsResult.error) {
+    console.error("getListingsGroupedByDepartment", placesResult.error?.message ?? eventsResult.error?.message)
+    return { departments, listingsByDepartment: Object.fromEntries(departments.map((d) => [d.slug, []])) }
   }
 
-  const mapped = (data as ListingRow[] | null)?.map(mapListing) ?? []
+  const places = (placesResult.data as ListingRow[] | null)?.map(mapListing) ?? []
+  const events = (eventsResult.data as ListingRow[] | null)?.map(mapListing) ?? []
   const grouped = Object.fromEntries(
-    DEPARTMENTS.map((department) => [
-      department,
-      mapped
-        .filter((item) => item.department === department)
-        .slice(0, limitPerDept),
+    departments.map((department) => [
+      department.slug,
+      interleaveListings(
+        places.filter((item) => item.department_id === department.id),
+        events.filter((item) => item.department_id === department.id),
+        limitPerDept
+      ),
     ])
   ) as Record<string, Listing[]>
 
-  return grouped
+  return { departments, listingsByDepartment: grouped }
+}
+
+function interleaveListings(places: Listing[], events: Listing[], limit: number): Listing[] {
+  const result: Listing[] = []
+  let placeIndex = 0
+  let eventIndex = 0
+  while (result.length < limit && (placeIndex < places.length || eventIndex < events.length)) {
+    if (placeIndex < places.length) result.push(places[placeIndex++])
+    if (result.length < limit && eventIndex < events.length) result.push(events[eventIndex++])
+  }
+  return result
 }
 
 export async function getListingBySlug(

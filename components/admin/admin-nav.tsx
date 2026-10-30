@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, MapPin, CalendarDays, Inbox, ImageIcon, Tags, PanelsTopLeft } from "lucide-react"
+import { LayoutDashboard, MapPin, CalendarDays, Inbox, ImageIcon, Tags, PanelsTopLeft, Handshake } from "lucide-react"
 
 const ADMIN_NAV = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard, ready: true },
@@ -11,6 +11,7 @@ const ADMIN_NAV = [
   { href: "/admin/categorias", label: "Categorías", icon: Tags, ready: true },
   { href: "/admin/contenido", label: "Home", icon: PanelsTopLeft, ready: true },
   { href: "/admin/moderacion", label: "Moderación", icon: Inbox, ready: true },
+  { href: "/admin/aliados", label: "Aliados", icon: Handshake, ready: true },
   { href: "/admin/portadas", label: "Portadas", icon: ImageIcon, ready: true },
 ] as const
 

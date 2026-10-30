@@ -1,10 +1,10 @@
 "use server"
 
-import { revalidatePath, revalidateTag } from "next/cache"
+import { revalidatePath, revalidateTag, updateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import { z } from "zod"
 import { getAdmin } from "@/lib/admin/auth"
-import { DEPARTMENTS, type ListingType } from "@/lib/types/listing"
+import type { ListingType } from "@/lib/types/listing"
 import { createClient } from "@/lib/supabase/server"
 
 export type ListingActionState = { error: string | null }
@@ -18,7 +18,7 @@ const coreSchema = z.object({
   title: z.string().trim().min(2).max(160),
   slug: z.string().trim().min(2).max(180).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   description: z.string().trim().min(10).max(10000),
-  department: z.enum(DEPARTMENTS),
+  department_id: z.number().int().positive(),
   meeting_point: z.string().trim().max(300),
   cover_image_url: optionalUrl,
   price_from: z.number().nonnegative().nullable(),
@@ -130,7 +130,7 @@ async function saveListing(
     title: rawTitle,
     slug,
     description: String(formData.get("description") ?? ""),
-    department: String(formData.get("department") ?? ""),
+    department_id: Number(formData.get("department_id")),
     meeting_point: String(formData.get("meeting_point") ?? ""),
     cover_image_url: String(formData.get("cover_image_url") ?? ""),
     price_from: optionalNumber(formData.get("price_from")),
@@ -200,7 +200,7 @@ async function saveListing(
     slug: parsed.data.slug,
     title: parsed.data.title,
     description: parsed.data.description,
-    department: parsed.data.department,
+    department_id: parsed.data.department_id,
     meeting_point: parsed.data.meeting_point,
     cover_image_url: parsed.data.cover_image_url,
     starts_at: eventFields?.starts_at ?? null,
@@ -227,6 +227,16 @@ async function saveListing(
   }
 
   const supabase = await createClient()
+  if (submissionId) {
+    const { data: submission, error: submissionError } = await supabase
+      .from("community_submissions")
+      .select("listing_type, status")
+      .eq("id", submissionId)
+      .maybeSingle()
+    if (submissionError || !submission || submission.status !== "pending" || submission.listing_type !== type) {
+      return { error: "El aporte ya no está pendiente o corresponde a otro tipo de contenido." }
+    }
+  }
   const { data: listingId, error } = await supabase.rpc("save_admin_listing", {
     p_listing_type: type,
     p_listing_id: id,
@@ -237,11 +247,11 @@ async function saveListing(
   })
   if (error || !listingId) {
     if (error?.code === "23505") return { error: "Ese slug ya existe o el aporte ya fue convertido." }
-    if (error?.code === "23514") return { error: "Una categoría seleccionada ya no está activa para este tipo." }
+    if (error?.code === "23514") return { error: "El departamento debe estar activo y las categorías seleccionadas deben estar disponibles." }
     return { error: "No se pudo guardar. Revisa los datos y vuelve a intentarlo." }
   }
 
-  revalidateTag("public-listings", "max")
+  updateTag("public-listings")
   revalidateTag("public-categories", "max")
   revalidateTag("home-content", "max")
   revalidatePath("/")

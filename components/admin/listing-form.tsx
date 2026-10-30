@@ -3,8 +3,8 @@
 import { useActionState, useMemo, useState, type Dispatch, type InputHTMLAttributes, type ReactNode, type SetStateAction } from "react"
 import { Plus, Trash2 } from "lucide-react"
 import type { AdminCategory, AdminActivityCategory } from "@/lib/admin/content"
-import type { Listing, ListingType, SubEvent } from "@/lib/types/listing"
-import { DEPARTMENTS } from "@/lib/types/listing"
+import type { Department, Listing, ListingType, SubEvent } from "@/lib/types/listing"
+import type { CommunitySubmission } from "@/lib/types/listing"
 import { CoverPicker } from "@/components/admin/cover-picker"
 import { saveEventAction, savePlaceAction, type ListingActionState } from "@/lib/admin/listing-actions"
 
@@ -20,26 +20,27 @@ type ListingFormProps = {
   type: ListingType
   categories: AdminCategory[]
   activityCategories: AdminActivityCategory[]
+  departments: Department[]
   initial?: FormListing
-  submission?: { id: number; place_name: string; department: string; comment: string } | null
+  submission?: (CommunitySubmission & { photo_url: string | null }) | null
 }
 
 const fieldClass = "min-h-11 w-full rounded-xl border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
 const areaClass = "w-full resize-y rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
 const labelClass = "mb-1.5 block text-sm font-medium text-foreground"
 
-export function ListingForm({ type, categories, activityCategories, initial = {}, submission }: ListingFormProps) {
+export function ListingForm({ type, categories, activityCategories, departments, initial = {}, submission }: ListingFormProps) {
   const action = type === "place" ? savePlaceAction : saveEventAction
   const [state, formAction, pending] = useActionState<ListingActionState, FormData>(action, { error: null })
-  const [title, setTitle] = useState(initial.title ?? submission?.place_name ?? "")
-  const [slug, setSlug] = useState(initial.slug ?? "")
+  const [title, setTitle] = useState(initial.title ?? submission?.title ?? "")
+  const [slug, setSlug] = useState(initial.slug ?? slugify(submission?.title ?? ""))
   const [slugEdited, setSlugEdited] = useState(Boolean(initial.slug))
   const [agenda, setAgenda] = useState<AgendaDraft[]>(toAgendaDrafts(initial.sub_events ?? [], activityCategories[0]?.id ?? 0))
   const selected = new Set(initial.category_ids ?? [])
   const categoryOptions = categories.filter((category) => category.listing_types.includes(type) && (category.is_active || selected.has(category.id)))
   const extrasValue = useMemo(() => JSON.stringify(initial.extras ?? {}, null, 2), [initial.extras])
 
-  const descriptionValue = initial.description ?? submission?.comment ?? ""
+  const descriptionValue = initial.description ?? submission?.description ?? submission?.comment ?? ""
 
   return (
     <form action={formAction} className="space-y-6">
@@ -56,14 +57,14 @@ export function ListingForm({ type, categories, activityCategories, initial = {}
           <Field label="Slug de la URL" htmlFor="slug">
             <input id="slug" name="slug" required minLength={2} maxLength={180} value={slug} onChange={(event) => { setSlugEdited(true); setSlug(slugify(event.target.value)) }} className={fieldClass} />
           </Field>
-          <Field label="Departamento" htmlFor="department">
-            <select id="department" name="department" required defaultValue={initial.department ?? submission?.department ?? ""} className={fieldClass}>
+          <Field label="Departamento" htmlFor="department_id">
+            <select id="department_id" name="department_id" required defaultValue={initial.department_id ?? submission?.department_id ?? ""} className={fieldClass}>
               <option value="" disabled>Selecciona un departamento</option>
-              {DEPARTMENTS.map((department) => <option key={department} value={department}>{department}</option>)}
+              {departments.map((department) => <option key={department.id} value={department.id} disabled={!department.is_active && department.id !== initial.department_id && department.id !== submission?.department_id}>{department.name}{department.is_active ? "" : " (inactivo)"}</option>)}
             </select>
           </Field>
           <Field label="Punto de referencia" htmlFor="meeting_point">
-            <input id="meeting_point" name="meeting_point" maxLength={300} defaultValue={initial.meeting_point ?? ""} className={fieldClass} />
+            <input id="meeting_point" name="meeting_point" maxLength={300} defaultValue={initial.meeting_point ?? submission?.meeting_point ?? ""} className={fieldClass} />
           </Field>
         </div>
         <Field label="Descripción" htmlFor="description">
@@ -91,26 +92,26 @@ export function ListingForm({ type, categories, activityCategories, initial = {}
             </div>
           )}
         </fieldset>
-        <CoverPicker folder={slug || undefined} defaultUrl={initial.cover_image_url} name="cover_image_url" label="Portada" />
+        <CoverPicker folder={slug || undefined} defaultUrl={initial.cover_image_url} sourcePhotoUrl={submission?.photo_url} name="cover_image_url" label="Portada" />
       </section>
 
       {type === "place" ? (
         <section className="space-y-4 rounded-2xl border border-border bg-card p-5">
           <SectionTitle title="Visita y logística" description="Información práctica para planificar la visita." />
           <Field label="Horario habitual" htmlFor="schedule_text">
-            <textarea id="schedule_text" name="schedule_text" rows={3} maxLength={1000} defaultValue={initial.schedule_text ?? ""} placeholder="Ej. Todos los días · 8:00 a. m. – 5:00 p. m." className={areaClass} />
+            <textarea id="schedule_text" name="schedule_text" rows={3} maxLength={1000} defaultValue={initial.schedule_text ?? submission?.schedule_text ?? ""} placeholder="Ej. Todos los días · 8:00 a. m. – 5:00 p. m." className={areaClass} />
           </Field>
-          <LogisticsFields initial={initial} extrasValue={extrasValue} />
+          <LogisticsFields initial={initial} extrasValue={extrasValue} submission={submission} />
         </section>
       ) : (
         <section className="space-y-4 rounded-2xl border border-border bg-card p-5">
           <SectionTitle title="Fechas y agenda" description="Define cuándo ocurre y agrega actividades opcionales por día." />
           <div className="grid gap-4 md:grid-cols-2">
             <Field label="Fecha y hora de inicio" htmlFor="starts_at">
-              <input id="starts_at" name="starts_at" type="datetime-local" required defaultValue={toDateTimeLocal(initial.starts_at)} className={fieldClass} />
+              <input id="starts_at" name="starts_at" type="datetime-local" required defaultValue={toDateTimeLocal(initial.starts_at ?? submission?.starts_at)} className={fieldClass} />
             </Field>
             <Field label="Fecha y hora de cierre" htmlFor="ends_at">
-              <input id="ends_at" name="ends_at" type="datetime-local" defaultValue={toDateTimeLocal(initial.ends_at)} className={fieldClass} />
+              <input id="ends_at" name="ends_at" type="datetime-local" defaultValue={toDateTimeLocal(initial.ends_at ?? submission?.ends_at)} className={fieldClass} />
             </Field>
           </div>
           <fieldset className="space-y-3">
@@ -152,12 +153,12 @@ export function ListingForm({ type, categories, activityCategories, initial = {}
               <Plus className="size-4" aria-hidden="true" /> Agregar actividad
             </button>
           </fieldset>
-          <LogisticsFields initial={initial} extrasValue={extrasValue} />
+          <LogisticsFields initial={initial} extrasValue={extrasValue} submission={submission} />
         </section>
       )}
 
       <section className="space-y-4 rounded-2xl border border-border bg-card p-5">
-        <SectionTitle title="Contacto y enlaces" description="Agrega solo los canales oficiales que correspondan." />
+        <SectionTitle title="Canales oficiales" description="Agrega solo los canales oficiales que correspondan." />
         <div className="grid gap-4 md:grid-cols-2">
           <TextInput name="whatsapp_phone" label="WhatsApp (con código de país)" defaultValue={initial.whatsapp_phone ?? ""} placeholder="50370000000" />
           <TextInput name="instagram_url" label="Instagram" type="url" defaultValue={initial.instagram_url ?? ""} />
@@ -228,24 +229,24 @@ function updateAgenda<K extends keyof Omit<AgendaDraft, "key">>(
   setRows((rows) => rows.map((row, rowIndex) => rowIndex === index ? { ...row, [key]: value } : row))
 }
 
-function LogisticsFields({ initial, extrasValue }: { initial: FormListing; extrasValue: string }) {
+function LogisticsFields({ initial, extrasValue, submission }: { initial: FormListing; extrasValue: string; submission?: CommunitySubmission | null }) {
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      <TextInput name="price_from" label="Precio desde (USD)" type="number" min="0" step="0.01" defaultValue={initial.price_from ?? ""} />
+      <TextInput name="price_from" label="Precio desde (USD)" type="number" min="0" step="0.01" defaultValue={initial.price_from ?? submission?.price_from ?? ""} />
       <Field label="Formas de pago" htmlFor="payment_methods">
-        <textarea id="payment_methods" name="payment_methods" rows={2} defaultValue={(initial.payment_methods ?? []).join(", ")} placeholder="Efectivo, tarjeta, transferencia" className={areaClass} />
+        <textarea id="payment_methods" name="payment_methods" rows={2} defaultValue={(initial.payment_methods ?? submission?.payment_methods ?? []).join(", ")} placeholder="Efectivo, tarjeta, transferencia" className={areaClass} />
       </Field>
       <Field label="Transporte / cómo llegar" htmlFor="transport_info">
-        <textarea id="transport_info" name="transport_info" rows={3} defaultValue={initial.transport_info ?? ""} className={areaClass} />
+        <textarea id="transport_info" name="transport_info" rows={3} defaultValue={initial.transport_info ?? submission?.transport_info ?? ""} className={areaClass} />
       </Field>
       <Field label="Accesibilidad" htmlFor="accessibility_notes">
-        <textarea id="accessibility_notes" name="accessibility_notes" rows={3} defaultValue={initial.accessibility_notes ?? ""} className={areaClass} />
+        <textarea id="accessibility_notes" name="accessibility_notes" rows={3} defaultValue={initial.accessibility_notes ?? submission?.accessibility_notes ?? ""} className={areaClass} />
       </Field>
       <Field label="Restricciones" htmlFor="restrictions">
         <textarea id="restrictions" name="restrictions" rows={2} defaultValue={initial.restrictions ?? ""} className={areaClass} />
       </Field>
       <Field label="Etiquetas (separadas por coma)" htmlFor="tags">
-        <textarea id="tags" name="tags" rows={2} defaultValue={(initial.tags ?? []).join(", ")} className={areaClass} />
+        <textarea id="tags" name="tags" rows={2} defaultValue={(initial.tags ?? submission?.tags ?? []).join(", ")} className={areaClass} />
       </Field>
       <Field label="Servicios adicionales (JSON)" htmlFor="extras">
         <textarea id="extras" name="extras" rows={4} defaultValue={extrasValue} className={`${areaClass} font-mono text-xs`} />

@@ -6,9 +6,9 @@ import {
   FilterChip,
 } from "@/components/listings/category-chip"
 import { DirectoryCard } from "@/components/listings/listing-cards"
-import { DEPARTMENTS } from "@/lib/types/listing"
 import {
   getCategories,
+  getPublicDepartments,
   searchListings,
 } from "@/lib/listings/queries"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -73,8 +73,9 @@ async function ExplorarResults({
   const departamento = params.departamento || undefined
   const tag = params.tag || undefined
 
-  const [categories, result] = await Promise.all([
+  const [categories, departments, result] = await Promise.all([
     getCategories(),
+    getPublicDepartments(),
     searchListings({
       q,
       category: categoria,
@@ -135,13 +136,13 @@ async function ExplorarResults({
             Departamento
           </p>
           <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
-            {DEPARTMENTS.map((dep) => (
+            {departments.map((dep) => (
               <FilterChip
-                key={dep}
-                label={dep}
-                active={departamento === dep}
+                key={dep.id}
+                label={dep.name}
+                active={departamento === dep.slug || departamento === dep.name}
                 href={hrefFor({
-                  departamento: departamento === dep ? null : dep,
+                  departamento: departamento === dep.slug || departamento === dep.name ? null : dep.slug,
                 })}
               />
             ))}

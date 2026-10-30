@@ -3,22 +3,23 @@
 import { useState } from "react"
 import Link from "next/link"
 import { cn } from "cn"
-import { DEPARTMENTS } from "@/lib/types/listing"
-import type { Listing } from "@/lib/types/listing"
-import { PlaceCard } from "@/components/listings/listing-cards"
+import type { Department, Listing } from "@/lib/types/listing"
+import { EventCard, PlaceCard } from "@/components/listings/listing-cards"
 
 type DepartmentPlacesTabsProps = {
-  placesByDepartment: Record<string, Listing[]>
+  departments: Department[]
+  listingsByDepartment: Record<string, Listing[]>
 }
 
 export function DepartmentPlacesTabs({
-  placesByDepartment,
+  departments,
+  listingsByDepartment,
 }: DepartmentPlacesTabsProps) {
   const initial =
-    DEPARTMENTS.find((dep) => (placesByDepartment[dep]?.length ?? 0) > 0) ??
-    DEPARTMENTS[0]
-  const [active, setActive] = useState<string>(initial)
-  const places = placesByDepartment[active] ?? []
+    departments.find((dep) => (listingsByDepartment[dep.slug]?.length ?? 0) > 0) ?? departments[0]
+  const [active, setActive] = useState<string>(initial?.slug ?? "")
+  const listings = listingsByDepartment[active] ?? []
+  const activeDepartment = departments.find((department) => department.slug === active)
 
   return (
     <section className="space-y-3">
@@ -27,7 +28,7 @@ export function DepartmentPlacesTabs({
           Explora por departamento
         </h2>
         <Link
-          href={`/explorar?departamento=${encodeURIComponent(active)}`}
+          href={active ? `/explorar?departamento=${encodeURIComponent(active)}` : "/explorar"}
           className="text-sm font-medium text-primary hover:underline"
         >
           Ver todos
@@ -39,15 +40,15 @@ export function DepartmentPlacesTabs({
         aria-label="Departamentos"
         className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-0 sm:px-0"
       >
-        {DEPARTMENTS.map((department) => {
-          const selected = department === active
+        {departments.map((department) => {
+          const selected = department.slug === active
           return (
             <button
-              key={department}
+              key={department.id}
               type="button"
               role="tab"
               aria-selected={selected}
-              onClick={() => setActive(department)}
+              onClick={() => setActive(department.slug)}
               className={cn(
                 "shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors",
                 selected
@@ -55,20 +56,24 @@ export function DepartmentPlacesTabs({
                   : "border-border bg-card text-foreground hover:border-primary/40 hover:bg-muted"
               )}
             >
-              {department}
+              {department.name}
             </button>
           )
         })}
       </div>
 
-      {places.length === 0 ? (
+      {listings.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border bg-card px-4 py-8 text-center text-sm text-muted-foreground">
-          Aún no hay lugares publicados en {active}.
+          {activeDepartment
+            ? `Aún no hay lugares ni eventos próximos publicados en ${activeDepartment.name}.`
+            : "Todavía no hay departamentos activos en el catálogo."}
         </div>
       ) : (
         <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 sm:-mx-0 sm:px-0">
-          {places.map((listing) => (
-            <PlaceCard key={listing.id} listing={listing} />
+          {listings.map((listing) => (
+            listing.type === "event"
+              ? <EventCard key={listing.id} listing={listing} />
+              : <PlaceCard key={listing.id} listing={listing} />
           ))}
         </div>
       )}

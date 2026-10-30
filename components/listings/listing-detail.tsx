@@ -16,6 +16,7 @@ import { CoverImage } from "@/components/listings/cover-image"
 import { EventAgenda } from "@/components/listings/event-agenda"
 import { FavoriteButton } from "@/components/listings/favorite-button"
 import { TicketPurchaseCta } from "@/components/listings/ticket-purchase-cta"
+import { ListingPartners } from "@/components/listings/listing-partners"
 
 function extrasLabel(extras: Record<string, unknown>): string {
   const labels: string[] = []
@@ -49,7 +50,7 @@ export function ListingDetail({
 
   return (
     <article className="flex min-h-full flex-1 flex-col">
-      <div className="relative aspect-[16/11] w-full bg-muted sm:aspect-[21/9] sm:max-h-[28rem]">
+      <div className="relative aspect-[16/11] w-full bg-muted sm:mx-auto sm:mt-6 sm:aspect-[16/9] sm:w-[calc(100%-3rem)] sm:max-w-4xl sm:overflow-hidden sm:rounded-2xl">
         <CoverImage
           src={listing.cover_image_url}
           slug={listing.slug}
@@ -141,6 +142,8 @@ export function ListingDetail({
         </section>
 
         <AccommodationBanner listing={listing} />
+
+        {listing.type === "place" ? <ListingPartners partners={listing.partners ?? []} /> : null}
 
         {listing.type === "event" && subEvents.length > 0 ? (
           <EventAgenda items={subEvents} />

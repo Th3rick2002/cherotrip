@@ -2,6 +2,7 @@ import type {
   ActivityCategory,
   Category,
   CommunitySubmission,
+  Department,
   HomeQuickLink,
   Listing,
   ListingType,
@@ -26,6 +27,16 @@ export type AdminListingDetail = AdminListing & {
 
 export type AdminActivityCategory = ActivityCategory
 
+export async function getAdminDepartments(): Promise<Department[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from("departments")
+    .select("id, name, slug, is_active, sort_order")
+    .order("sort_order", { ascending: true })
+  if (error) throw new Error("No se pudieron cargar los departamentos.")
+  return (data ?? []) as Department[]
+}
+
 export type AdminCommunitySubmission = CommunitySubmission & {
   converted_listing_id: number | null
   photo_url: string | null
@@ -35,17 +46,22 @@ export async function getAdminListings(type: ListingType): Promise<AdminListing[
   const supabase = await createClient()
   const { data, error } = await supabase
     .from("listings")
-    .select("id, slug, type, title, description, department, cover_image_url, starts_at, ends_at, schedule_text, price_from, is_published, featured, verified, published_at, created_at, listing_categories(category_id)")
+    .select("id, slug, type, title, description, department_id, department_info:departments!listings_department_id_fkey(name), cover_image_url, starts_at, ends_at, schedule_text, price_from, is_published, featured, verified, published_at, created_at, listing_categories(category_id)")
     .eq("type", type)
     .order("updated_at", { ascending: false })
 
   if (error) throw new Error(`No se pudo cargar el contenido: ${error.message}`)
-  return ((data ?? []) as Array<Record<string, unknown>>).map((row) => ({
-    ...row,
-    category_ids: ((row.listing_categories as Array<{ category_id: number }> | null) ?? []).map(
-      (link) => link.category_id
-    ),
-  })) as unknown as AdminListing[]
+  return ((data ?? []) as Array<Record<string, unknown>>).map((row) => {
+    const departmentInfo = row.department_info as { name: string } | null
+    delete row.department_info
+    return {
+      ...row,
+      department: departmentInfo?.name ?? "",
+      category_ids: ((row.listing_categories as Array<{ category_id: number }> | null) ?? []).map(
+        (link) => link.category_id
+      ),
+    }
+  }) as unknown as AdminListing[]
 }
 
 export async function getAdminListing(
@@ -55,7 +71,7 @@ export async function getAdminListing(
   const supabase = await createClient()
   const { data, error } = await supabase
     .from("listings")
-    .select("*, listing_categories(category_id)")
+    .select("*, department_info:departments!listings_department_id_fkey(name), listing_categories(category_id)")
     .eq("id", id)
     .eq("type", type)
     .maybeSingle()
@@ -72,8 +88,11 @@ export async function getAdminListing(
   if (agendaError) throw new Error(`No se pudo cargar la agenda: ${agendaError.message}`)
 
   const row = data as unknown as Record<string, unknown>
+  const departmentInfo = row.department_info as { name: string } | null
+  delete row.department_info
   return {
     ...(row as unknown as Listing),
+    department: departmentInfo?.name ?? "",
     is_published: row.is_published as boolean,
     created_at: row.created_at as string,
     category_ids: ((row.listing_categories as Array<{ category_id: number }> | null) ?? []).map(
@@ -138,13 +157,13 @@ export async function getPendingCommunitySubmissions(): Promise<AdminCommunitySu
   const supabase = await createClient()
   const { data, error } = await supabase
     .from("community_submissions")
-    .select("id, place_name, department, comment, photo_path, contact_optional, status, created_at, converted_listing_id")
+    .select("*, department_info:departments!community_submissions_department_id_fkey(name)")
     .eq("status", "pending")
     .order("created_at", { ascending: true })
   if (error) throw new Error("No se pudieron cargar los aportes pendientes.")
 
   return Promise.all(
-    ((data ?? []) as CommunitySubmission[]).map(async (submission) => {
+    ((data ?? []) as Array<CommunitySubmission & { department_info: { name: string } | null }>).map(async (submission) => {
       let photoUrl: string | null = null
       if (submission.photo_path) {
         const { data: signed } = await supabase.storage
@@ -152,8 +171,10 @@ export async function getPendingCommunitySubmissions(): Promise<AdminCommunitySu
           .createSignedUrl(submission.photo_path, 10 * 60)
         photoUrl = signed?.signedUrl ?? null
       }
+      const { department_info: departmentInfo, ...submissionData } = submission
       return {
-        ...submission,
+        ...submissionData,
+        department: departmentInfo?.name ?? "",
         converted_listing_id: (submission as CommunitySubmission & { converted_listing_id?: number }).converted_listing_id ?? null,
         photo_url: photoUrl,
       }
@@ -165,7 +186,7 @@ export async function getPendingCommunitySubmission(id: number): Promise<AdminCo
   const supabase = await createClient()
   const { data, error } = await supabase
     .from("community_submissions")
-    .select("id, place_name, department, comment, photo_path, contact_optional, status, created_at, converted_listing_id")
+    .select("*, department_info:departments!community_submissions_department_id_fkey(name)")
     .eq("id", id)
     .eq("status", "pending")
     .maybeSingle()
@@ -179,8 +200,11 @@ export async function getPendingCommunitySubmission(id: number): Promise<AdminCo
       .createSignedUrl(data.photo_path, 10 * 60)
     photoUrl = signed?.signedUrl ?? null
   }
+  const submission = data as unknown as CommunitySubmission & { department_info: { name: string } | null }
+  const { department_info: departmentInfo, ...submissionData } = submission
   return {
-    ...(data as unknown as CommunitySubmission),
+    ...submissionData,
+    department: departmentInfo?.name ?? "",
     converted_listing_id: (data as { converted_listing_id: number | null }).converted_listing_id,
     photo_url: photoUrl,
   }

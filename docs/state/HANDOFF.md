@@ -4,8 +4,8 @@
 
 - **Proyecto:** Cherotrip, Next.js 16, React 19, TypeScript, Tailwind y Supabase.
 - **Rama/commit base:** `main`, con PRs #52 (`feat: implement form in admin panel`) y #53 (`fix: fixed images cover`) fusionados y desplegados en Vercel.
-- **Supabase MVP:** proyecto `xrnffirpxbnslwnvudpu`. Migraciones aplicadas al 100%, incluyendo `20261027045830_admin_cms_content.sql`. Usuario admin creado y autenticado en `public.admin_users`.
-- **Datos:** limpieza remota completada el 2026-10-28. Se eliminaron listings, aportes, agendas relacionadas y archivos de ambos buckets. Se conservaron `auth.users` y `public.admin_users`.
+- **Supabase MVP:** proyecto `xrnffirpxbnslwnvudpu`. En la comprobación del 2026-10-29, CLI confirmó migraciones locales/remotas alineadas hasta `20261030034738_expand_community_submissions_and_add_listing_partners.sql`. Usuario admin existente en `public.admin_users`.
+- **Datos:** la limpieza remota del 2026-10-28 se completó y después se empezó a cargar contenido real. Consulta de solo lectura del 2026-10-29: 18 listings (17 publicados, 1 borrador) y 1 aporte comunitario. No se tocaron usuarios.
 
 ## CMS y Código Fusionados en Producción
 
@@ -26,14 +26,14 @@ Quedan abiertas únicamente las 5 tareas de lanzamiento y verificación final:
 
 ## Próximos pasos inmediatos
 
-1. **Cargar contenido verificado (#27):**
-   - Entrar al panel administrativo en `https://cherotrip.vercel.app/admin/lugares` y `/admin/eventos`, y alimentar los listings reales de El Salvador con sus teléfonos oficiales.
+1. **Completar contenido verificado (#27):**
+   - Continuar revisando los listings y sus teléfonos oficiales desde el panel `/admin/lugares` y `/admin/eventos`.
 2. **Confirmar variable de entorno (#30):**
    - Verificar en Vercel que `NEXT_PUBLIC_SITE_URL` tenga el dominio oficial configurado.
 3. **Completar QA de soft launch (#28 y #26):**
    - Correr los 5 flujos en móvil y firmar la lista de exclusiones para cerrar el MVP formalmente.
 
-Las migraciones remotas ya fueron aplicadas por el usuario. En esta planificación no se tocaron datos; tampoco se ejecutaron tests de base de datos ni se inició Supabase local/Docker/Podman.
+Las migraciones remotas se verificaron con `supabase migration list --linked`. Las consultas de este turno fueron de solo lectura; no se aplicaron migraciones ni se modificaron datos remotos.
 
 ## Convenciones
 
@@ -46,10 +46,11 @@ Las migraciones remotas ya fueron aplicadas por el usuario. En esta planificaci�
 ## Verificación local
 
 - `pnpm exec next typegen`: correcto.
-- `pnpm exec tsc --noEmit`: correcto.
-- ESLint dirigido a las rutas/componentes/librerías cambiados: correcto.
-- `pnpm lint` global todavía falla por una regla `no-this-alias` en el archivo generado `public/sw.js`; sus otros avisos también provienen del archivo generado. No se cambió dicho artefacto.
+- ESLint dirigido a las rutas/componentes/librerías cambiados en esta corrección: correcto.
 - `git diff --check`: correcto.
+- El chequeo de tipos pasa al usar el manifiesto actual de rutas y excluir el manifiesto de desarrollo obsoleto. El `tsconfig` normal sigue leyendo `.next/dev/types/validator.ts` viejo, que aún apunta a `/contacto`.
+- `pnpm exec next build` no completó: primero no pudo descargar Plus Jakarta Sans de Google Fonts; al reintentar, Turbopack falló al crear un proceso por una restricción del entorno. `--webpack` también falló al leer la salida de `tsc --showConfig`.
+- `pnpm lint` global todavía falla por una regla `no-this-alias` en el archivo generado `public/sw.js`; sus otros avisos también provienen del archivo generado. No se cambió dicho artefacto.
 
 ## Incidencias reportadas al probar el panel
 
@@ -73,3 +74,24 @@ Las migraciones remotas ya fueron aplicadas por el usuario. En esta planificaci�
 - Catálogos verificados: 3 categorías editoriales, 6 alcances de categoría, 9 categorías de actividad y 6 accesos rápidos canónicos de Home.
 - La UI y la base de datos aceptan únicamente San Miguel, Usulután, La Unión y Morazán. `20261028120000_restrict_departments_to_eastern_region.sql` está aplicada y registrada en el historial remoto.
 - SQL de la operación puntual: `supabase/ops/one_time_reset_mvp_content_20261028.sql`. No volver a ejecutarlo tras empezar la carga de datos reales.
+
+## Video promocional (2026-10-29)
+
+- La persona usuaria eligió OpenFilm para un video de pitch de 20 segundos y pidió guardar el flujo antes de producir.
+- Plan y storyboard en [`docs/marketing/video-promo-20s.md`](../marketing/video-promo-20s.md).
+- **No iniciar la producción todavía:** primero la persona usuaria indicará las correcciones de código; después se cargará/revisará contenido real en Supabase y se grabará la interfaz.
+- La DB ya contiene contenido real cargado después de la limpieza. No introducir fixtures falsos en producción para el video.
+
+## Correcciones previas al video (2026-10-29)
+
+- Home ahora mezcla lugares publicados con eventos próximos por departamento. La verificación remota mostró que San Miguel y Usulután tienen eventos publicados, pero ningún lugar; por eso la agrupación anterior, limitada a lugares, dejaba esas pestañas vacías.
+- Aportes comunitarios: ahora aceptan lugares y eventos con detalles propios, datos logísticos y foto privada. Moderación abre el formulario del tipo correcto, precarga los datos y permite copiar la foto privada al bucket de portadas.
+- Relaciones comerciales: nuevas tablas `partners` y `listing_partners`, gestión básica en `/admin/aliados` y tarjetas debajo de la logística de lugares. `editorial` se muestra como «Aliado local», `paid_marketing` como «Anuncio pagado» y `sponsor` como «Patrocinador». No se guardan contratos, descuentos ni compras referidas.
+- Se eliminó `/contacto` de rutas, navegación y sitemap. Se conservaron los campos de contacto directo de los negocios/listings, necesarios para sus canales oficiales.
+- Las portadas de detalle tienen ancho máximo menor en desktop; `/admin` cuenta con 404 propio y vuelve al panel/listas en vez de Explorar.
+- La migración `20261030034738_expand_community_submissions_and_add_listing_partners.sql` está aplicada y registrada en remoto (confirmado por CLI); amplía aportes, renombra `place_name` a `title`, crea las tablas de aliados y admite AVIF en portadas.
+- Se corrigieron las rutas de edición: los directorios dinámicos estaban nombrados literalmente `'[id]'` con comillas y Next no los reconocía. Ahora están en `[id]`, de modo que `/admin/eventos/{id}` y `/admin/lugares/{id}` alcanzan sus páginas y el `notFound()` del segmento usa la vista 404 de admin.
+- El propietario aprobó normalizar departamentos. La migración local `20261030145125_normalize_departments_catalog.sql` crea `public.departments`, carga los cuatro nombres iniciales, convierte `listings.department` y `community_submissions.department` a `department_id` con backfill y claves foráneas, actualiza RLS y el RPC del CMS. No elimina listings, aportes ni usuarios.
+- Home, Explorar, aportes comunitarios, formularios del CMS y selector de aliados leen el catálogo activo. Los formularios envían IDs; el modelo de lectura resuelve el nombre para mostrar. `supabase/seed.sql` también usa los IDs del catálogo.
+- El esquema documentado está en [`docs/specs/database-schema.md`](../specs/database-schema.md). La migración está creada localmente y **no se ha aplicado al proyecto remoto**; debe aplicarse antes de desplegar el código que la requiere.
+- Pendiente QA manual y carga de listings reales. Después se validará el contenido y se grabará la UI para OpenFilm, según [`docs/marketing/video-promo-20s.md`](../marketing/video-promo-20s.md).

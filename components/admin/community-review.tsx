@@ -13,14 +13,17 @@ export function CommunityReview({ submissions, saved, error }: { submissions: Ad
       {submissions.length === 0 ? <div className="rounded-2xl border border-dashed border-border bg-card px-4 py-12 text-center text-sm text-muted-foreground">No hay aportes pendientes.</div> : null}
       <div className="grid gap-4 xl:grid-cols-2">
         {submissions.map((submission) => <article key={submission.id} className="overflow-hidden rounded-2xl border border-border bg-card">
-          {submission.photo_url ? <div className="relative aspect-[16/8] bg-muted"><Image src={submission.photo_url} alt={`Foto compartida para ${submission.place_name}`} fill sizes="(min-width: 1280px) 50vw, 100vw" unoptimized className="object-cover" /></div> : null}
+          {submission.photo_url ? <div className="relative aspect-[16/8] bg-muted"><Image src={submission.photo_url} alt={`Foto compartida para ${submission.title}`} fill sizes="(min-width: 1280px) 50vw, 100vw" unoptimized className="object-cover" /></div> : null}
           <div className="space-y-4 p-5">
-            <div><span className="rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-semibold text-amber-800">Pendiente</span><h2 className="mt-3 text-xl font-semibold text-foreground">{submission.place_name}</h2></div>
+            <div><span className="rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-semibold text-amber-800">{submission.listing_type === "event" ? "Evento" : "Lugar"} · Pendiente</span><h2 className="mt-3 text-xl font-semibold text-foreground">{submission.title}</h2></div>
             <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground"><span className="inline-flex items-center gap-1.5"><MapPin className="size-4" />{submission.department}</span><span className="inline-flex items-center gap-1.5"><CalendarClock className="size-4" />{formatDate(submission.created_at)}</span>{submission.contact_optional ? <span className="inline-flex items-center gap-1.5"><UserRound className="size-4" />{submission.contact_optional}</span> : null}</div>
             <p className="flex gap-2 whitespace-pre-wrap rounded-xl bg-muted/50 p-3 text-sm leading-relaxed text-foreground"><MessageSquare className="mt-0.5 size-4 shrink-0 text-muted-foreground" />{submission.comment}</p>
+            {submission.description ? <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">{submission.description}</p> : null}
+            {submission.meeting_point ? <p className="text-sm text-muted-foreground">Punto: {submission.meeting_point}</p> : null}
+            {submission.listing_type === "event" && submission.starts_at ? <p className="text-sm text-muted-foreground">Inicio: {formatDate(submission.starts_at)}{submission.ends_at ? ` · Cierre: ${formatDate(submission.ends_at)}` : ""}</p> : null}
             <div className="flex flex-wrap justify-end gap-2 border-t border-border pt-4">
               <form action={rejectCommunitySubmission}><input type="hidden" name="submission_id" value={submission.id} /><button className="min-h-10 rounded-lg border border-destructive/30 px-3 text-sm font-semibold text-destructive hover:bg-destructive/10">Rechazar</button></form>
-              <Link href={`/admin/lugares/nuevo?submission=${submission.id}`} className="inline-flex min-h-10 items-center rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Convertir en borrador</Link>
+              <Link href={`/admin/${submission.listing_type === "event" ? "eventos" : "lugares"}/nuevo?submission=${submission.id}`} className="inline-flex min-h-10 items-center rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Convertir en borrador</Link>
             </div>
           </div>
         </article>)}

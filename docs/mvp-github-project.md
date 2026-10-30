@@ -221,7 +221,7 @@ Navegación entre rutas stub funciona en móvil.
 ## Modelo propuesto (unificado)
 Tabla `listings`:
 - identidad: `id`, `slug`, `type` (`event`|`place`), `title`, `description`
-- ubicación: `department`, `meeting_point`
+- ubicación: `department_id` → catálogo `departments`, `meeting_point`
 - clasificación: `categories[]` / FK, `tags[]`
 - media: `cover_image_url`
 - logística: `starts_at`, `ends_at`, `schedule_text`
@@ -233,7 +233,7 @@ Tabla `listings`:
 
 ## Alcance
 - [ ] Migración SQL
-- [ ] Índices: `starts_at`, `department`, GIN en categorías/tags, unique `slug`
+- [ ] Índices: `starts_at`, `department_id`, GIN en categorías/tags, unique `slug`
 - [ ] RLS: SELECT público solo `is_published = true`; sin write desde anon
 - [ ] Tipos TypeScript generados o manuales
 

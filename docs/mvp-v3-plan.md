@@ -88,44 +88,36 @@ Eso implica: schema nuevo, UI en P3, y ajustar exclusiones (antes “cero UGC”
 ### Ampliar `listings` (columnas opcionales)
 
 ```text
-link_instagram text
-link_facebook text
-link_tiktok text
-link_taquilla text
-proveedor_taquilla text
-link_alojamiento text          -- URL directa hotel/Airbnb listado
-municipio_busqueda text        -- ej. "San-Miguel--El-Salvador" para armar Airbnb
+instagram_url text
+facebook_url text
+tiktok_url text
+ticket_url text
+ticket_provider text
+accommodation_url text        -- URL directa de alojamiento
+accommodation_search_query text
 ```
 
-### Nueva tabla `sub_eventos`
+### Tabla `sub_events`
 
 ```text
-id, listing_id (FK listings),
-fecha_dia date,
-hora_inicio time,
-hora_fin time null,
-titulo_actividad text,
-descripcion_breve text null,
-lugar_especifico text null,
-tipo_actividad text null,
-sort_order int default 0
+id, listing_id, event_date, start_time, end_time, title,
+description, venue, activity_category_id, sort_order
 ```
 
-Índice: `(listing_id, fecha_dia, hora_inicio)`.
-
-### Nueva tabla `aportes_comunidad` (Fase 2)
+### Tabla `community_submissions`
 
 ```text
-id, nombre_lugar, departamento, comentario, foto_url null,
-contacto_opcional, estado ('pendiente'|'aprobado'|'rechazado'),
-created_at
+id, title, listing_type, department_id, comment, description,
+meeting_point, schedule_text, price_from, payment_methods,
+transport_info, accessibility_notes, tags, starts_at, ends_at,
+photo_path, contact_optional, status, converted_listing_id, created_at
 ```
 
-RLS: `anon` solo `INSERT`; lectura/update solo service role / dashboard.
+`department_id` referencia `departments.id`; ver el [esquema vigente de departamentos](./specs/database-schema.md). La tabla `activity_categories` contiene el catálogo de agenda asociado a `sub_events`.
 
 ### Excel turismo
 
-Actualizar `docs/templates/cherotrip-plantilla-listings.xlsx` con columnas nuevas + hoja opcional `sub_eventos`.
+La plantilla de listings se mantiene separada del esquema SQL; sus columnas deben usar nombres en inglés.
 
 ---
 

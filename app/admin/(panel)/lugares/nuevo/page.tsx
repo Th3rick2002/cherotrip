@@ -1,15 +1,16 @@
 import { ListingForm } from "@/components/admin/listing-form"
-import { getAdminActivityCategories, getAdminCategories, getPendingCommunitySubmission } from "@/lib/admin/content"
+import { getAdminActivityCategories, getAdminCategories, getAdminDepartments, getPendingCommunitySubmission } from "@/lib/admin/content"
 import { requireAdmin } from "@/lib/admin/auth"
 
 export const metadata = { title: "Nuevo lugar" }
 
 export default async function NewPlacePage({ searchParams }: { searchParams: Promise<{ submission?: string }> }) {
   await requireAdmin()
-  const [{ submission }, categories, activityCategories] = await Promise.all([
+  const [{ submission }, categories, activityCategories, departments] = await Promise.all([
     searchParams,
     getAdminCategories(),
     getAdminActivityCategories(),
+    getAdminDepartments(),
   ])
   const submissionId = submission && /^\d+$/.test(submission) ? Number(submission) : null
   const communitySubmission = submissionId ? await getPendingCommunitySubmission(submissionId) : null
@@ -22,7 +23,7 @@ export default async function NewPlacePage({ searchParams }: { searchParams: Pro
         <p className="mt-1 text-sm text-muted-foreground">Completa la ficha y guárdala como borrador o publícala.</p>
       </header>
       {submissionId && !communitySubmission ? <p role="alert" className="rounded-xl bg-amber-500/10 px-4 py-3 text-sm text-amber-900">El aporte ya no está pendiente o no se pudo cargar. Puedes crear el lugar manualmente.</p> : null}
-      <ListingForm type="place" categories={categories} activityCategories={activityCategories} submission={communitySubmission ?? null} />
+      <ListingForm type="place" categories={categories} activityCategories={activityCategories} departments={departments} submission={communitySubmission ?? null} />
     </div>
   )
 }
