@@ -10,6 +10,7 @@ Directorio turístico y agenda cultural de El Salvador. Enfocado en conversión 
 - [`ui-ux/`](./ui-ux/): Sistema de diseño y especificación de interfaces.
   - [`design-system.md`](./ui-ux/design-system.md) · Paleta Océano/Arena, tokens y componentes.
   - [`screens.md`](./ui-ux/screens.md) · P1 Home, P2 Explorar, P3 Detalle y navegación.
+  - [`feedback-visual.md`](./ui-ux/feedback-visual.md) · Estados de carga, acciones pendientes, transiciones y QA visual.
 - [`specs/`](./specs/): Especificaciones funcionales por módulo.
   - [`database-schema.md`](./specs/database-schema.md) · Catálogo geográfico y relaciones de departamentos.
   - [`directorio-core.md`](./specs/directorio-core.md) · Buscador, directorio y ficha base.

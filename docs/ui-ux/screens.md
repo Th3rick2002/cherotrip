@@ -17,7 +17,7 @@ Flujo y comportamiento visual de las pantallas de Cherotrip.
 
 - **Ruta:** `app/(main)/explorar/page.tsx`
 - **Comportamiento:**
-  - **Barra de Búsqueda:** Campo de texto predictivo con debounce.
+  - **Barra de Búsqueda:** Campo de texto y botón **Buscar**; al enviar muestra el estado **Buscando…** y carga los resultados con skeleton.
   - **Filtros Independientes:** Fila de chips de Categorías y dropdown o selector de Departamento (mutuamente combinables).
   - **Grid de Resultados:** Lista responsiva (1 col en móvil, 2 en tablet, 3-4 en desktop) con componentes `ListingCard`.
   - **Card de Listing:** Imagen de portada (`CoverImage`), badge de categoría/departamento, título, precio referencial y botón de corazón para favoritos.
@@ -35,6 +35,8 @@ Flujo y comportamiento visual de las pantallas de Cherotrip.
   - **Alojamiento (`AccommodationBanner`):** Tarjeta blanca con botón azul e icono de hospedaje; referencia Airbnb para búsquedas y destinos alojados allí.
   - **Agenda de Eventos (`EventAgenda`):** (Solo eventos) Selector de días por tabs y timeline cronológico de actividades.
   - **Compra de entradas (`TicketPurchaseCta`):** Tarjeta azul al final del contenido de eventos con URL de taquilla válida. WhatsApp queda junto a las redes y no hay barra fija inferior.
+  - **Información importante para tu visita:** Lista formal que puede incluir restricciones, horarios, público recomendado y condiciones generales.
+  - **Servicios en la zona:** Para lugares, se ubica al final de la ficha. Distingue aliados locales, anuncios y patrocinios mediante etiquetas compactas y colores diferentes.
 
 ## 4. Navegación Global
 
@@ -62,6 +64,7 @@ Flujo y comportamiento visual de las pantallas de Cherotrip.
 - `/admin/dashboard` muestra métricas de lugares, eventos, publicaciones, borradores y aportes pendientes.
 - `/admin/portadas` permite subir/listar/copiar/borrar imágenes de `listing-covers`.
 - Lugares, eventos, categorías, Home y moderación ya tienen rutas de gestión. Los formularios están conectados a la base de datos mediante la nueva migración CMS.
+- Las acciones administrativas muestran estado pendiente y se bloquean durante el envío; el panel usa skeletons al cargar. Los controles indican interacción con cursor y microanimación.
 
 - **Enfoque:** Diseñado para pantallas de escritorio (computadoras de oficina), priorizando densidad de información, rapidez de captura y claridad tabular.
 - **Rutas objetivo:**

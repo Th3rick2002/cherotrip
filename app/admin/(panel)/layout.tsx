@@ -1,6 +1,8 @@
 import { Suspense } from "react"
 import { AdminNav } from "@/components/admin/admin-nav"
 import { AdminAccount } from "@/components/admin/admin-account"
+import { AdminPageSkeleton } from "@/components/admin/admin-page-skeleton"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function AdminPanelLayout({ children }: LayoutProps<"/admin">) {
   return (
@@ -12,13 +14,13 @@ export default function AdminPanelLayout({ children }: LayoutProps<"/admin">) {
         </div>
         <AdminNav />
         <div className="mt-auto border-t border-slate-800 pt-4">
-          <Suspense fallback={<div className="h-16 animate-pulse rounded-lg bg-slate-800" />}>
+          <Suspense fallback={<div className="space-y-3"><Skeleton className="h-3 w-32 bg-slate-800" /><Skeleton className="h-10 w-full bg-slate-800" /></div>}>
             <AdminAccount />
           </Suspense>
         </div>
       </aside>
       <main className="min-w-0 flex-1 px-4 py-6 sm:px-8 sm:py-8">
-        <Suspense fallback={<div className="mx-auto max-w-7xl animate-pulse rounded-2xl bg-card p-8 text-sm text-muted-foreground">Cargando panel…</div>}>
+        <Suspense fallback={<AdminPageSkeleton />}>
           {children}
         </Suspense>
       </main>

@@ -1,6 +1,7 @@
 import { requireAdmin } from "@/lib/admin/auth"
 import { createClient } from "@/lib/supabase/server"
 import { createPartnerAction, linkPartnerAction } from "@/lib/admin/partner-actions"
+import { PendingSubmitButton } from "@/components/admin/pending-submit-button"
 
 export const metadata = { title: "Aliados y patrocinadores" }
 
@@ -27,7 +28,7 @@ export default async function PartnersPage({ searchParams }: { searchParams: Pro
           <div className="grid gap-3"><Field label="Sitio web"><input name="website_url" type="url" className={inputClass} /></Field><Field label="URL del logo"><input name="logo_url" type="url" className={inputClass} /></Field></div>
           <Field label="WhatsApp oficial"><input name="whatsapp_phone" maxLength={40} placeholder="50370000000" className={inputClass} /></Field>
           <Field label="Instagram"><input name="instagram_url" type="url" className={inputClass} /></Field>
-          <div className="md:col-span-2"><button className={buttonClass}>Registrar negocio</button></div>
+          <div className="md:col-span-2"><PendingSubmitButton pendingLabel="Registrando…" className={buttonClass}>Registrar negocio</PendingSubmitButton></div>
         </form>
       </section>
       <section className="rounded-2xl border border-border bg-card p-5">
@@ -38,7 +39,7 @@ export default async function PartnersPage({ searchParams }: { searchParams: Pro
           <Field label="Negocio"><select name="partner_id" required defaultValue="" className={inputClass}><option value="" disabled>Selecciona un negocio</option>{(partners ?? []).filter((p) => p.is_active).map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}</select></Field>
           <Field label="Tipo de relación"><select name="relationship_type" className={inputClass}><option value="editorial">Aliado local (editorial)</option><option value="paid_marketing">Marketing pagado</option><option value="sponsor">Patrocinador</option></select></Field>
           <Field label="Texto para mostrar (opcional)"><input name="display_text" maxLength={500} placeholder="Servicio, ubicación u otra descripción breve" className={inputClass} /></Field>
-          <div className="md:col-span-2"><button className={buttonClass}>Guardar relación</button></div>
+          <div className="md:col-span-2"><PendingSubmitButton pendingLabel="Guardando…" className={buttonClass}>Guardar relación</PendingSubmitButton></div>
         </form>
       </section>
       <section className="space-y-3">

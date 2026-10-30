@@ -54,4 +54,4 @@ Inspirada en la costa y volcanes de El Salvador:
 - **Sidebar Admin:** Fondo neutro oscuro (`bg-slate-900 text-slate-100`) con acentos de selección sutiles (`bg-slate-800 text-white`).
 - **Data-Tables:** Componentes `Table` de shadcn/ui con filas compactas (`py-2.5`), cabeceras fijas ordenables y badges de estado (`Publicado`, `Borrador`, `Pendiente`, `Rechazado`).
 - **Formularios de Captura:** Distribución a dos o tres columnas en pantallas anchas para evitar scrolling innecesario.
-- **Feedback Operativo:** Toasts mediante `sonner` ubicados en `top-right` o `bottom-right` para confirmación inmediata de mutaciones.
+- **Feedback Operativo:** Las mutaciones muestran estado pendiente en el botón que las inició, con spinner, texto descriptivo y bloqueo durante el envío. Las cargas de páginas o bloques usan skeletons. Los controles responden al hover y la pulsación con transiciones breves y respetan la preferencia de movimiento reducido. Ver [`feedback-visual.md`](./feedback-visual.md) para el comportamiento y QA.

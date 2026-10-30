@@ -95,3 +95,12 @@ Las migraciones remotas se verificaron con `supabase migration list --linked`. L
 - Home, Explorar, aportes comunitarios, formularios del CMS y selector de aliados leen el catálogo activo. Los formularios envían IDs; el modelo de lectura resuelve el nombre para mostrar. `supabase/seed.sql` también usa los IDs del catálogo.
 - El esquema documentado está en [`docs/specs/database-schema.md`](../specs/database-schema.md). La migración está creada localmente y **no se ha aplicado al proyecto remoto**; debe aplicarse antes de desplegar el código que la requiere.
 - Pendiente QA manual y carga de listings reales. Después se validará el contenido y se grabará la UI para OpenFilm, según [`docs/marketing/video-promo-20s.md`](../marketing/video-promo-20s.md).
+
+## Feedback visual y mejoras UI/UX (2026-10-30)
+
+- Formularios de categorías, contenido de Home, aliados, moderación y cierre de sesión muestran estado pendiente con spinner y bloquean envíos repetidos. La conversión de foto de aporte a portada también se bloquea mientras prepara/sube la imagen.
+- El panel admin muestra skeleton durante las cargas de página y de sesión.
+- La ficha presenta la información importante para la visita (restricciones, horarios y público recomendado) como lista formal y coloca «Servicios en la zona» al final. Las etiquetas de aliado, anuncio y patrocinador usan colores distintos y quedan separadas del nombre del negocio para soportar nombres largos.
+- El buscador de Explorar tiene botón explícito «Buscar» y estado «Buscando…»; botones y enlaces reciben cursor y respuesta breve al pulsar, respetando `prefers-reduced-motion`.
+- El comportamiento completo y los criterios de QA están en [`docs/ui-ux/feedback-visual.md`](../ui-ux/feedback-visual.md). Las microtransiciones actuales son de botones/enlaces; la transición entre rutas queda como posible mejora incremental, no es requisito para esta entrega.
+- Pendiente QA visual/manual de estos ajustes; todavía no se han probado en navegador.

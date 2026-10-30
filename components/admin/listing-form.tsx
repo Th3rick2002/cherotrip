@@ -1,7 +1,7 @@
 "use client"
 
 import { useActionState, useMemo, useState, type Dispatch, type InputHTMLAttributes, type ReactNode, type SetStateAction } from "react"
-import { Plus, Trash2 } from "lucide-react"
+import { LoaderCircle, Plus, Trash2 } from "lucide-react"
 import type { AdminCategory, AdminActivityCategory } from "@/lib/admin/content"
 import type { Department, Listing, ListingType, SubEvent } from "@/lib/types/listing"
 import type { CommunitySubmission } from "@/lib/types/listing"
@@ -243,7 +243,7 @@ function LogisticsFields({ initial, extrasValue, submission }: { initial: FormLi
         <textarea id="accessibility_notes" name="accessibility_notes" rows={3} defaultValue={initial.accessibility_notes ?? submission?.accessibility_notes ?? ""} className={areaClass} />
       </Field>
       <Field label="Restricciones" htmlFor="restrictions">
-        <textarea id="restrictions" name="restrictions" rows={2} defaultValue={initial.restrictions ?? ""} className={areaClass} />
+        <textarea id="restrictions" name="restrictions" rows={3} placeholder="Una consideración por línea. Ej. No apto para menores de 15 años." defaultValue={initial.restrictions ?? ""} className={areaClass} />
       </Field>
       <Field label="Etiquetas (separadas por coma)" htmlFor="tags">
         <textarea id="tags" name="tags" rows={2} defaultValue={(initial.tags ?? submission?.tags ?? []).join(", ")} className={areaClass} />
@@ -272,8 +272,8 @@ function SectionTitle({ title, description }: { title: string; description: stri
 }
 
 function SubmitButton({ children, name, value, pending, variant = "primary", confirmMessage }: { children: ReactNode; name: string; value: string; pending: boolean; variant?: "primary" | "outline"; confirmMessage?: string }) {
-  return <button type="submit" name={name} value={value} disabled={pending} onClick={(event) => { if (confirmMessage && !window.confirm(confirmMessage)) event.preventDefault() }} className={`inline-flex min-h-11 items-center justify-center rounded-xl px-4 text-sm font-semibold disabled:opacity-60 ${variant === "primary" ? "bg-primary text-primary-foreground hover:bg-primary/90" : "border border-border bg-background hover:bg-muted"}`}>
-    {pending ? "Guardando…" : children}
+  return <button type="submit" name={name} value={value} disabled={pending} aria-busy={pending} onClick={(event) => { if (confirmMessage && !window.confirm(confirmMessage)) event.preventDefault() }} className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold transition disabled:cursor-wait disabled:opacity-60 ${variant === "primary" ? "bg-primary text-primary-foreground hover:bg-primary/90" : "border border-border bg-background hover:bg-muted"}`}>
+    {pending ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : null}{pending ? "Guardando…" : children}
   </button>
 }
 

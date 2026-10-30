@@ -3,6 +3,7 @@ import {
   saveDirectoryCategory,
 } from "@/lib/admin/catalog-actions"
 import type { AdminActivityCategory, AdminCategory } from "@/lib/admin/content"
+import { PendingSubmitButton } from "@/components/admin/pending-submit-button"
 
 const inputClass = "min-h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
 
@@ -45,7 +46,7 @@ export function CategoryManager({
                 </div>
                 <div className="flex items-center justify-between gap-2">
                   <label className="flex items-center gap-1 text-xs"><input type="checkbox" name="is_active" defaultChecked={category.is_active} />Sí</label>
-                  <button className="rounded-lg bg-primary px-2.5 py-2 text-xs font-semibold text-primary-foreground">Guardar</button>
+                  <PendingSubmitButton pendingLabel="Guardando…" className="inline-flex items-center justify-center gap-1 rounded-lg bg-primary px-2.5 py-2 text-xs font-semibold text-primary-foreground transition hover:bg-primary/90">Guardar</PendingSubmitButton>
                 </div>
               </form></td></tr>)}
               {categories.length === 0 ? <tr><td colSpan={7} className="px-3 py-6 text-center text-muted-foreground">No hay categorías.</td></tr> : null}
@@ -58,7 +59,7 @@ export function CategoryManager({
           <input name="icon" aria-label="Ícono" placeholder="Ícono (opcional)" className={inputClass} />
           <input name="sort_order" aria-label="Orden" type="number" min="0" defaultValue="0" className={inputClass} />
           <div className="flex items-center gap-3 text-sm"><label className="flex items-center gap-1"><input type="checkbox" name="listing_types" value="place" defaultChecked />Lugar</label><label className="flex items-center gap-1"><input type="checkbox" name="listing_types" value="event" defaultChecked />Evento</label><input type="checkbox" name="is_active" defaultChecked hidden /></div>
-          <button className="min-h-10 rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground">Agregar categoría</button>
+          <PendingSubmitButton pendingLabel="Agregando…" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">Agregar categoría</PendingSubmitButton>
         </form>
         <p className="text-xs text-muted-foreground">En las categorías existentes puedes desmarcar “Activa” para retirarlas de los filtros sin afectar listings anteriores.</p>
       </section>
@@ -72,14 +73,14 @@ export function CategoryManager({
             <input name="name" aria-label="Nombre" required defaultValue={category.name} className={inputClass} />
             <input name="sort_order" aria-label="Orden" type="number" min="0" defaultValue={category.sort_order} className={inputClass} />
             <label className="flex items-center gap-1 text-xs"><input type="checkbox" name="is_active" defaultChecked={category.is_active} />Activa</label>
-            <button className="rounded-lg bg-primary px-2.5 py-2 text-xs font-semibold text-primary-foreground">Guardar</button>
+            <PendingSubmitButton pendingLabel="Guardando…" className="inline-flex items-center justify-center gap-1 rounded-lg bg-primary px-2.5 py-2 text-xs font-semibold text-primary-foreground transition hover:bg-primary/90">Guardar</PendingSubmitButton>
           </form>)}
         </div>
         <form action={saveActivityCategory} className="grid gap-3 rounded-xl border border-dashed border-border p-4 sm:grid-cols-4">
           <input name="slug" aria-label="Slug" required placeholder="Slug (ej. music-concert)" className={inputClass} />
           <input name="name" aria-label="Nombre" required placeholder="Nombre visible" className={inputClass} />
           <input name="sort_order" aria-label="Orden" type="number" min="0" defaultValue="0" className={inputClass} />
-          <button className="min-h-10 rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground">Agregar actividad</button>
+          <PendingSubmitButton pendingLabel="Agregando…" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">Agregar actividad</PendingSubmitButton>
           <input type="checkbox" name="is_active" defaultChecked hidden />
         </form>
       </section>

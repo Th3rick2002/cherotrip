@@ -20,3 +20,4 @@ Guía general de diseño, arquitectura visual y experiencia de usuario de Cherot
 
 - [`design-system.md`](./design-system.md) · Tokens de color, tipografía, jerarquías y componentes base.
 - [`screens.md`](./screens.md) · Especificación detallada de cada pantalla y sus estados.
+- [`feedback-visual.md`](./feedback-visual.md) · Cargas, estados pendientes, microinteracciones y QA visual.

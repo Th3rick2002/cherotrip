@@ -27,13 +27,13 @@ export function ListingPartners({ partners }: { partners: ListingPartner[] }) {
             <article key={id} className="flex gap-3 rounded-2xl border border-border bg-card p-4">
               {partner.logo_url ? <div className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-muted"><Image src={partner.logo_url} alt="" fill sizes="56px" className="object-contain" unoptimized /></div> : <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-muted text-primary"><Handshake className="size-6" /></div>}
               <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <h3 className="font-semibold text-foreground">{partner.name}</h3>
-                  <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${paid ? "bg-amber-500/15 text-amber-900" : "bg-primary/10 text-primary"}`}>
-                    {paid ? <BadgeCheck className="size-3" /> : null}{relationshipLabel}
+                <h3 className="break-words font-semibold leading-snug text-foreground">{partner.name}</h3>
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <span className={`inline-flex max-w-full items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold leading-tight ${relationship_type === "editorial" ? "bg-emerald-500/10 text-emerald-800" : relationship_type === "paid_marketing" ? "bg-blue-100 text-blue-900" : "bg-amber-100 text-amber-900"}`}>
+                    {paid ? <BadgeCheck className="size-3 shrink-0" aria-hidden="true" /> : null}<span className="break-words">{relationshipLabel}</span>
                   </span>
+                  <p className="text-xs text-muted-foreground">{categoryLabels[partner.category]}</p>
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground">{categoryLabels[partner.category]}</p>
                 {display_text || partner.description ? <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{display_text || partner.description}</p> : null}
                 {href ? <a href={href} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex min-h-9 items-center text-sm font-semibold text-primary hover:underline">Ver servicio</a> : null}
               </div>

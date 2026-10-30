@@ -3,6 +3,7 @@ import {
   Bus,
   CalendarClock,
   MapPin,
+  ShieldAlert,
   Ticket,
   Users,
 } from "lucide-react"
@@ -47,6 +48,10 @@ export function ListingDetail({
     listing.payment_methods.length > 0
       ? listing.payment_methods.join(", ")
       : null
+  const restrictions = (listing.restrictions ?? "")
+    .split(/\r?\n|•|;+/)
+    .map((restriction) => restriction.trim())
+    .filter(Boolean)
 
   return (
     <article className="flex min-h-full flex-1 flex-col">
@@ -143,19 +148,30 @@ export function ListingDetail({
 
         <AccommodationBanner listing={listing} />
 
-        {listing.type === "place" ? <ListingPartners partners={listing.partners ?? []} /> : null}
-
         {listing.type === "event" && subEvents.length > 0 ? (
           <EventAgenda items={subEvents} />
         ) : null}
 
-        {listing.restrictions ? (
-          <div className="rounded-2xl border border-sand-strong/30 bg-sand-strong/10 px-4 py-3 text-sm text-foreground">
-            {listing.restrictions}
-          </div>
+        {restrictions.length > 0 ? (
+          <section className="space-y-3" aria-labelledby="listing-restrictions-title">
+            <div className="flex items-center gap-2">
+              <ShieldAlert className="size-5 text-muted-foreground" aria-hidden="true" />
+              <h2 id="listing-restrictions-title" className="text-lg font-semibold text-foreground">Información importante para tu visita</h2>
+            </div>
+            <ul className="space-y-2 pl-1 text-sm leading-relaxed text-muted-foreground">
+              {restrictions.map((restriction, index) => (
+                <li key={`${index}-${restriction}`} className="flex gap-2.5">
+                  <span className="mt-[0.65em] size-1.5 shrink-0 rounded-full bg-muted-foreground/70" aria-hidden="true" />
+                  <span>{restriction}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
         ) : null}
 
         <TicketPurchaseCta listing={listing} />
+
+        {listing.type === "place" ? <ListingPartners partners={listing.partners ?? []} /> : null}
       </div>
     </article>
   )

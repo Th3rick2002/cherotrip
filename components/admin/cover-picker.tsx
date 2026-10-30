@@ -46,6 +46,7 @@ export function CoverPicker({
   const [url, setUrl] = useState<string | null>(defaultUrl)
   const [preview, setPreview] = useState<string | null>(null)
   const [status, setStatus] = useState<Status>("idle")
+  const [copyingSuggestion, setCopyingSuggestion] = useState(false)
   const [error, setError] = useState("")
   const [dragging, setDragging] = useState(false)
 
@@ -99,6 +100,7 @@ export function CoverPicker({
   async function handleSuggestedPhoto() {
     if (!sourcePhotoUrl || locked) return
     setError("")
+    setCopyingSuggestion(true)
     try {
       const response = await fetch(sourcePhotoUrl)
       if (!response.ok) throw new Error()
@@ -107,6 +109,8 @@ export function CoverPicker({
       await handleFile(file)
     } catch {
       fail("No pudimos copiar la foto del aporte. Descárgala o elige otra imagen.")
+    } finally {
+      setCopyingSuggestion(false)
     }
   }
 
@@ -135,7 +139,7 @@ export function CoverPicker({
 
   const shown = preview ?? url
   const uploading = status === "uploading"
-  const locked = uploading || disabled
+  const locked = uploading || copyingSuggestion || disabled
 
   return (
     <div className="space-y-2">
@@ -219,7 +223,7 @@ export function CoverPicker({
       {sourcePhotoUrl && !url ? (
         <div className="flex items-center gap-3 rounded-xl border border-border p-3">
           <div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-muted"><Image src={sourcePhotoUrl} alt="Foto adjunta al aporte" fill sizes="64px" unoptimized className="object-cover" /></div>
-          <div className="min-w-0 flex-1"><p className="text-sm font-medium">Foto del aporte</p><button type="button" onClick={() => void handleSuggestedPhoto()} disabled={locked} className="mt-1 text-sm font-semibold text-primary underline-offset-4 hover:underline disabled:opacity-60">Usar como portada</button></div>
+          <div className="min-w-0 flex-1"><p className="text-sm font-medium">Foto del aporte</p><button type="button" onClick={() => void handleSuggestedPhoto()} disabled={locked} aria-busy={copyingSuggestion || uploading} className="mt-1 inline-flex items-center gap-1.5 text-sm font-semibold text-primary underline-offset-4 hover:underline disabled:cursor-wait disabled:opacity-60">{copyingSuggestion || uploading ? <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" /> : null}{copyingSuggestion ? "Preparando foto…" : uploading ? "Subiendo…" : "Usar como portada"}</button></div>
         </div>
       ) : null}
 

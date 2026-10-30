@@ -3,6 +3,7 @@ import Link from "next/link"
 import { CalendarClock, MapPin, MessageSquare, UserRound } from "lucide-react"
 import type { AdminCommunitySubmission } from "@/lib/admin/content"
 import { rejectCommunitySubmission } from "@/lib/admin/community-actions"
+import { PendingSubmitButton } from "@/components/admin/pending-submit-button"
 
 export function CommunityReview({ submissions, saved, error }: { submissions: AdminCommunitySubmission[]; saved: boolean; error?: string }) {
   return (
@@ -22,8 +23,8 @@ export function CommunityReview({ submissions, saved, error }: { submissions: Ad
             {submission.meeting_point ? <p className="text-sm text-muted-foreground">Punto: {submission.meeting_point}</p> : null}
             {submission.listing_type === "event" && submission.starts_at ? <p className="text-sm text-muted-foreground">Inicio: {formatDate(submission.starts_at)}{submission.ends_at ? ` · Cierre: ${formatDate(submission.ends_at)}` : ""}</p> : null}
             <div className="flex flex-wrap justify-end gap-2 border-t border-border pt-4">
-              <form action={rejectCommunitySubmission}><input type="hidden" name="submission_id" value={submission.id} /><button className="min-h-10 rounded-lg border border-destructive/30 px-3 text-sm font-semibold text-destructive hover:bg-destructive/10">Rechazar</button></form>
-              <Link href={`/admin/${submission.listing_type === "event" ? "eventos" : "lugares"}/nuevo?submission=${submission.id}`} className="inline-flex min-h-10 items-center rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Convertir en borrador</Link>
+              <form action={rejectCommunitySubmission}><input type="hidden" name="submission_id" value={submission.id} /><PendingSubmitButton pendingLabel="Rechazando…" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-destructive/30 px-3 text-sm font-semibold text-destructive transition hover:bg-destructive/10">Rechazar</PendingSubmitButton></form>
+              <Link href={`/admin/${submission.listing_type === "event" ? "eventos" : "lugares"}/nuevo?submission=${submission.id}`} className="inline-flex min-h-10 items-center rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">Convertir en borrador</Link>
             </div>
           </div>
         </article>)}
