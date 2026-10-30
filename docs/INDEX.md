@@ -10,7 +10,9 @@ Directorio turístico y agenda cultural de El Salvador. Enfocado en conversión 
 - [`ui-ux/`](./ui-ux/): Sistema de diseño y especificación de interfaces.
   - [`design-system.md`](./ui-ux/design-system.md) · Paleta Océano/Arena, tokens y componentes.
   - [`screens.md`](./ui-ux/screens.md) · P1 Home, P2 Explorar, P3 Detalle y navegación.
+  - [`feedback-visual.md`](./ui-ux/feedback-visual.md) · Estados de carga, acciones pendientes, transiciones y QA visual.
 - [`specs/`](./specs/): Especificaciones funcionales por módulo.
+  - [`database-schema.md`](./specs/database-schema.md) · Catálogo geográfico y relaciones de departamentos.
   - [`directorio-core.md`](./specs/directorio-core.md) · Buscador, directorio y ficha base.
   - [`expansion-logistica.md`](./specs/expansion-logistica.md) · Redes, alojamiento, taquilla y agenda.
   - [`social-light.md`](./specs/social-light.md) · Favoritos offline y aportes ciudadanos.
@@ -22,3 +24,4 @@ Directorio turístico y agenda cultural de El Salvador. Enfocado en conversión 
   - [`DONE.md`](./state/DONE.md) · Funcionalidades desplegadas.
   - [`TODO.md`](./state/TODO.md) · Backlog activo priorizado.
   - [`WONTDO.md`](./state/WONTDO.md) · Exclusiones intencionales del MVP.
+- [`marketing/video-promo-20s.md`](./marketing/video-promo-20s.md) · Plan, storyboard y flujo pendiente para el video promocional de Cherotrip.

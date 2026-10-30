@@ -10,7 +10,7 @@ import { QuickServices } from "@/components/home/quick-services"
 import { DepartmentPlacesTabs } from "@/components/home/department-places-tabs"
 import {
   getFeaturedPlaces,
-  getPlacesGroupedByDepartment,
+  getListingsGroupedByDepartment,
   getUpcomingEvents,
 } from "@/lib/listings/queries"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -81,8 +81,8 @@ async function UpcomingSection() {
 }
 
 async function DepartmentSection() {
-  const placesByDepartment = await getPlacesGroupedByDepartment(6)
-  return <DepartmentPlacesTabs placesByDepartment={placesByDepartment} />
+  const grouped = await getListingsGroupedByDepartment(6)
+  return <DepartmentPlacesTabs departments={grouped.departments} listingsByDepartment={grouped.listingsByDepartment} />
 }
 
 async function FeaturedSection() {

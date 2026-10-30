@@ -20,7 +20,7 @@ export type CoverUploadTicket =
   | { ok: false; error: string }
 
 const uploadSchema = z.object({
-  contentType: z.string().refine(isCoverContentType, "La imagen debe ser JPG, PNG o WebP."),
+  contentType: z.string().refine(isCoverContentType, "La imagen debe ser JPG, PNG, WebP o AVIF."),
   size: z
     .number()
     .int()

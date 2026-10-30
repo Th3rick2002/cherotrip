@@ -51,7 +51,7 @@ export function SideDrawer({ open, onOpenChange }: SideDrawerProps) {
                     : "text-foreground hover:bg-muted/70"
                 )}
               >
-                {item.label === "Contacto" ? "Contacto / Soporte" : item.label}
+                {item.label}
                 <ChevronRight className="size-4 text-muted-foreground" />
               </Link>
             )

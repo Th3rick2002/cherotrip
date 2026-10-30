@@ -9,12 +9,21 @@ export type Category = {
   sort_order: number
 }
 
+export type Department = {
+  id: number
+  name: string
+  slug: string
+  is_active: boolean
+  sort_order: number
+}
+
 export type Listing = {
   id: number
   slug: string
   type: ListingType
   title: string
   description: string
+  department_id: number
   department: string
   meeting_point: string | null
   cover_image_url: string | null
@@ -40,6 +49,7 @@ export type Listing = {
   featured: boolean
   published_at: string | null
   categories?: Category[]
+  partners?: ListingPartner[]
 }
 
 export type ActivityCategory = {
@@ -78,20 +88,39 @@ export type HomeQuickLink = {
 
 export type CommunitySubmission = {
   id: number
-  place_name: string
+  title: string
+  listing_type: ListingType
+  department_id: number
   department: string
   comment: string
+  description: string | null
+  meeting_point: string | null
+  schedule_text: string | null
+  price_from: number | null
+  payment_methods: string[]
+  transport_info: string | null
+  accessibility_notes: string | null
+  tags: string[]
+  starts_at: string | null
+  ends_at: string | null
   photo_path: string | null
   contact_optional: string | null
   status: CommunitySubmissionStatus
   created_at: string
 }
 
-export const DEPARTMENTS = [
-  "San Miguel",
-  "Usulután",
-  "La Unión",
-  "Morazán",
-] as const
-
-export type Department = (typeof DEPARTMENTS)[number]
+export type ListingPartner = {
+  id: number
+  relationship_type: "editorial" | "paid_marketing" | "sponsor"
+  display_text: string
+  partner: {
+    id: number
+    name: string
+    description: string
+    category: "food" | "accommodation" | "transport" | "activities" | "other"
+    logo_url: string | null
+    website_url: string | null
+    whatsapp_phone: string | null
+    instagram_url: string | null
+  }
+}

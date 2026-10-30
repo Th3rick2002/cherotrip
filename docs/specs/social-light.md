@@ -22,8 +22,8 @@ Permitir al usuario armar su propio itinerario o lista de deseos durante su viaj
   - Estado vacío: cuando no hay guardados, muestra mensaje motivacional y botón directo hacia el explorador.
 
 ### C. Página "Aporta a la Comunidad" — Issue #39
-- **Tabla DB:** `community_submissions` (`place_name`, `department`, `comment`, `photo_path`, `contact_optional`, `status = 'pending'`).
+- **Tabla DB:** `community_submissions` (`title`, `listing_type`, `department_id` → `departments.id`, `description`, datos logísticos según tipo, `photo_path`, `contact_optional`, `status = 'pending'`).
 - **Seguridad RLS:** Rol `anon` cuenta únicamente con permisos limitados de `INSERT`. No hay permisos de lectura pública ni edición para proteger la privacidad de los contactos.
-- **UI:** Página independiente `/aportar`, accesible desde la navegación de escritorio y el menú lateral móvil. Incluye nombre, departamento, comentario, contacto opcional y foto opcional. Home no muestra un banner de aportes.
+- **UI:** Página independiente `/aportar`, accesible desde la navegación de escritorio y el menú lateral móvil. Permite recomendar lugares o eventos, con campos específicos por tipo, detalles logísticos, contacto opcional y foto opcional. Home no muestra un banner de aportes.
 - **Fotos:** Carga al bucket privado `community-submission-photos`, solo JPG/PNG/WebP/AVIF hasta 5 MiB. La fila guarda el nombre del objeto en `photo_path`; no se expone una URL pública.
-- **Flujo:** Al enviar, muestra confirmación de agradecimiento sin refrescar la página. La fila usa el estado `pending` por defecto y Turismo revisa los aportes desde el Dashboard o el CMS.
+- **Flujo:** Al enviar, muestra confirmación de agradecimiento sin refrescar la página. La fila usa el estado `pending` por defecto. Moderación muestra los datos y la foto con URL firmada, y ofrece convertir el aporte en un borrador del mismo tipo con los campos precargados. Para usar la foto en la ficha, el admin la copia al bucket público de portadas.

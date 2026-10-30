@@ -10,6 +10,7 @@ export const COVER_TYPES = {
   "image/jpeg": "jpg",
   "image/png": "png",
   "image/webp": "webp",
+  "image/avif": "avif",
 } as const
 
 export type CoverContentType = keyof typeof COVER_TYPES
@@ -21,7 +22,7 @@ export const COVER_FOLDER_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/
 
 /** Misma forma que exige la política de `storage.objects`. */
 export const COVER_PATH_PATTERN =
-  /^[a-z0-9]+(-[a-z0-9]+)*\/[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\.(jpg|png|webp)$/
+  /^[a-z0-9]+(-[a-z0-9]+)*\/[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\.(jpg|png|webp|avif)$/
 
 export function isCoverContentType(type: string): type is CoverContentType {
   return Object.hasOwn(COVER_TYPES, type)

@@ -14,6 +14,8 @@ type CoverPickerProps = {
   folder?: string
   /** URL pública actual (p. ej. `cover_image_url` del listing al editar). */
   defaultUrl?: string | null
+  /** Temporary private URL for a community photo that can be copied to the public covers bucket. */
+  sourcePhotoUrl?: string | null
   /** Nombre del `<input type="hidden">` con la URL, para usarlo dentro de un `<form>`. */
   name?: string
   label?: string
@@ -32,6 +34,7 @@ type Status = "idle" | "uploading" | "error"
 export function CoverPicker({
   folder,
   defaultUrl = null,
+  sourcePhotoUrl = null,
   name,
   label = "Portada",
   disabled = false,
@@ -43,6 +46,7 @@ export function CoverPicker({
   const [url, setUrl] = useState<string | null>(defaultUrl)
   const [preview, setPreview] = useState<string | null>(null)
   const [status, setStatus] = useState<Status>("idle")
+  const [copyingSuggestion, setCopyingSuggestion] = useState(false)
   const [error, setError] = useState("")
   const [dragging, setDragging] = useState(false)
 
@@ -55,7 +59,7 @@ export function CoverPicker({
   async function handleFile(file: File) {
     setError("")
     if (!isCoverContentType(file.type)) {
-      fail("La imagen debe ser JPG, PNG o WebP.")
+      fail("La imagen debe ser JPG, PNG, WebP o AVIF.")
       return
     }
     if (file.size > COVER_MAX_BYTES) {
@@ -93,6 +97,23 @@ export function CoverPicker({
     onUploaded?.({ path: ticket.path, publicUrl: ticket.publicUrl })
   }
 
+  async function handleSuggestedPhoto() {
+    if (!sourcePhotoUrl || locked) return
+    setError("")
+    setCopyingSuggestion(true)
+    try {
+      const response = await fetch(sourcePhotoUrl)
+      if (!response.ok) throw new Error()
+      const blob = await response.blob()
+      const file = new File([blob], "community-photo", { type: blob.type })
+      await handleFile(file)
+    } catch {
+      fail("No pudimos copiar la foto del aporte. Descárgala o elige otra imagen.")
+    } finally {
+      setCopyingSuggestion(false)
+    }
+  }
+
   function fail(message: string) {
     setPreview(null)
     setStatus("error")
@@ -118,7 +139,7 @@ export function CoverPicker({
 
   const shown = preview ?? url
   const uploading = status === "uploading"
-  const locked = uploading || disabled
+  const locked = uploading || copyingSuggestion || disabled
 
   return (
     <div className="space-y-2">
@@ -187,7 +208,7 @@ export function CoverPicker({
           ref={inputRef}
           id={inputId}
           type="file"
-          accept="image/jpeg,image/png,image/webp"
+          accept="image/jpeg,image/png,image/webp,image/avif"
           disabled={locked}
           className="sr-only"
           onChange={(event) => {
@@ -198,6 +219,13 @@ export function CoverPicker({
       </label>
 
       {name ? <input type="hidden" name={name} value={url ?? ""} /> : null}
+
+      {sourcePhotoUrl && !url ? (
+        <div className="flex items-center gap-3 rounded-xl border border-border p-3">
+          <div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-muted"><Image src={sourcePhotoUrl} alt="Foto adjunta al aporte" fill sizes="64px" unoptimized className="object-cover" /></div>
+          <div className="min-w-0 flex-1"><p className="text-sm font-medium">Foto del aporte</p><button type="button" onClick={() => void handleSuggestedPhoto()} disabled={locked} aria-busy={copyingSuggestion || uploading} className="mt-1 inline-flex items-center gap-1.5 text-sm font-semibold text-primary underline-offset-4 hover:underline disabled:cursor-wait disabled:opacity-60">{copyingSuggestion || uploading ? <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" /> : null}{copyingSuggestion ? "Preparando foto…" : uploading ? "Subiendo…" : "Usar como portada"}</button></div>
+        </div>
+      ) : null}
 
       {error ? (
         <p role="alert" className="text-sm text-destructive">

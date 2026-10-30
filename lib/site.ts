@@ -13,6 +13,6 @@ export function getSiteUrl(): string {
 
 export const SITE_NAME = "Cherotrip"
 export const SITE_DESCRIPTION =
-  "Eventos y lugares del oriente de El Salvador con información verificada. Fecha, transporte, precio y contacto por WhatsApp."
+  "Eventos y lugares del oriente de El Salvador con información verificada. Fecha, transporte, precio y canales oficiales de cada negocio."
 export const SITE_THEME_COLOR = "#023E8A"
 export const SITE_BACKGROUND_COLOR = "#F8F9FA"

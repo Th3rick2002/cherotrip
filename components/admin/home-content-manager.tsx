@@ -1,6 +1,7 @@
 import { Backpack, Bus, CalendarDays, MapPin, Mountain, Ship, Tent, Users, Utensils, Waves } from "lucide-react"
 import type { HomeQuickLink } from "@/lib/types/listing"
 import { saveHomeQuickLink } from "@/lib/admin/catalog-actions"
+import { PendingSubmitButton } from "@/components/admin/pending-submit-button"
 
 const iconOptions = {
   backpack: Backpack,
@@ -49,7 +50,7 @@ function QuickLinkForm({ link, section }: { link?: HomeQuickLink; section?: Home
       <label className="space-y-1 text-xs text-muted-foreground">Icono<select name="icon_key" defaultValue={link?.icon_key ?? "map-pin"} className={inputClass}>{Object.keys(iconOptions).map((key) => <option key={key} value={key}>{key}</option>)}</select></label>
       <label className="space-y-1 text-xs text-muted-foreground">Orden<input name="sort_order" type="number" min="0" defaultValue={link?.sort_order ?? 0} className={inputClass} /></label>
       <label className="flex items-center gap-1.5 text-xs text-muted-foreground"><input type="checkbox" name="is_active" defaultChecked={link?.is_active ?? true} />Activo</label>
-      <button className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-semibold text-primary-foreground">{Icon ? <Icon className="size-3.5" aria-hidden="true" /> : null}{link ? "Guardar" : "Agregar"}</button>
+      <PendingSubmitButton pendingLabel="Guardando…" className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-semibold text-primary-foreground transition hover:bg-primary/90">{Icon ? <Icon className="size-3.5" aria-hidden="true" /> : null}{link ? "Guardar" : "Agregar"}</PendingSubmitButton>
     </form>
   )
 }
